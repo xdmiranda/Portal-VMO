@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ocorrências — Portal VMO</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+
+  <!-- Estilo local (só desta página) -->
+  <style>
+    .oc-wrap { display:flex; flex-direction:column; gap:16px; }
+    .oc-subtitle { margin-top:6px; color:#666; }
+
+    .oc-grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .oc-kpi{
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.06);
+      border-left:6px solid #f2c200;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-height:72px;
+    }
+    .oc-kpi.ok{ border-left-color:#2ecc71; }
+    .oc-kpi.warn{ border-left-color:#f39c12; }
+    .oc-kpi.danger{ border-left-color:#e74c3c; }
+    .oc-kpi.neutral{ border-left-color:#95a5a6; }
+
+    .oc-kpi .label{ font-size:12px; color:#666; font-weight:700; text-transform:uppercase; letter-spacing:.3px; }
+    .oc-kpi .value{ font-size:26px; font-weight:900; color:#222; line-height:1; }
+    .oc-kpi .hint{ font-size:12px; color:#777; }
+
+    .oc-toolbar{
+      display:grid;
+      grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+      gap:10px;
+      align-items:end;
+      margin-top:6px;
+    }
+    .oc-field label{
+      display:block;
+      font-size:12px;
+      color:#666;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+    .oc-field input, .oc-field select{
+      width:100%;
+      padding:10px 10px;
+      border-radius:10px;
+      border:1px solid #e4e4e4;
+      outline:none;
+      font-family:inherit;
+      font-size:14px;
+      background:#fff;
+      box-sizing:border-box;
+    }
+
+    .oc-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    .oc-btn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      border-radius:10px;
+      padding:10px 12px;
+      font-weight:900;
+      background:#f2c200;
+      color:#222;
+      box-shadow:0 10px 20px rgba(0,0,0,0.08);
+      transition:transform .2s ease, opacity .2s ease;
+      white-space:nowrap;
+    }
+    .oc-btn:hover{ transform: translateY(-1px); opacity:.95; }
+
+    .oc-btn.secondary{ background:#f3f3f3; }
+
+    .oc-table-wrap{
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.06);
+      overflow:hidden;
+      border:1px solid #eee;
+    }
+
+    table.oc-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+
+    .oc-table thead th{
+      text-align:left;
+      padding:12px;
+      background:#fafafa;
+      border-bottom:1px solid #eee;
+      color:#333;
+      font-weight:900;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+
+    .oc-table tbody td{
+      padding:12px;
+      border-bottom:1px solid #f0f0f0;
+      vertical-align:top;
+      color:#333;
+    }
+
+    .oc-table tbody tr:hover{
+      background: rgba(242,194,0,0.08);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:12px;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+    .badge.ok{ background: rgba(46,204,113,.12); color:#1f7a43; border-color: rgba(46,204,113,.25); }
+    .badge.danger{ background: rgba(231,76,60,.12); color:#8c2b22; border-color: rgba(231,76,60,.25); }
+    .badge.neutral{ background: rgba(149,165,166,.14); color:#4b5a5a; border-color: rgba(149,165,166,.25); }
+
+    .oc-more{
+      display:inline-block;
+      font-weight:900;
+      color:#1f1f1f;
+      text-decoration:underline;
+      cursor:pointer;
+      margin-top:6px;
+      font-size:12px;
+    }
+
+    .oc-empty{
+      padding:16px;
+      color:#666;
+      font-size:13px;
+    }
+
+    @media (max-width: 980px){
+      .oc-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .oc-toolbar{ grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px){
+      .oc-grid{ grid-template-columns: 1fr; }
+      .oc-toolbar{ grid-template-columns: 1fr; }
+      .oc-actions{ justify-content: stretch; }
+      .oc-btn{ width:100%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Topbar (mesma pegada do portal) -->
+  <header class="topbar">
+    <div class="left-section">
+      <div class="hamburger" id="menuToggle" role="button" tabindex="0" aria-controls="navMenu" aria-expanded="false">☰</div>
+
+      <div class="brand">
+        <div class="brand-loader-container" aria-hidden="true">
+          <div class="loader">
+            <div class="truckWrapper">
+              <div class="truckBody">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 198 93" class="trucksvg">
+                  <path stroke-width="3" stroke="#282828" fill="#F83D3D"
+                    d="M135 22.5H177.264C178.295 22.5 179.22 23.133 179.594 24.0939L192.33 56.8443C192.442 57.1332 192.5 57.4404 192.5 57.7504V89C192.5 90.3807 191.381 91.5 190 91.5H135C133.619 91.5 132.5 90.3807 132.5 89V25C132.5 23.6193 133.619 22.5 135 22.5Z"></path>
+                  <path stroke-width="3" stroke="#282828" fill="#7D7C7C"
+                    d="M146 33.5H181.741C182.779 33.5 183.709 34.1415 184.078 35.112L190.538 52.112C191.16 53.748 189.951 55.5 188.201 55.5H146C144.619 55.5 143.5 54.3807 143.5 53V36C143.5 34.6193 144.619 33.5 146 33.5Z"></path>
+                  <path stroke-width="2" stroke="#282828" fill="#282828"
+                    d="M150 65C150 65.39 149.763 65.8656 149.127 66.2893C148.499 66.7083 147.573 67 146.5 67C145.427 67 144.501 66.7083 143.873 66.2893C143.237 65.8656 143 65.39 143 65C143 64.61 143.237 64.1344 143.873 63.7107C144.501 63.2917 145.427 63 146.5 63C147.573 63 148.499 63.2917 149.127 63.7107C149.763 64.1344 150 64.61 150 65Z"></path>
+                  <rect stroke-width="2" stroke="#282828" fill="#FFFCAB" rx="1" height="7" width="5" y="63" x="187"></rect>
+                  <rect stroke-width="2" stroke="#282828" fill="#282828" rx="1" height="11" width="4" y="81" x="193"></rect>
+                  <rect stroke-width="3" stroke="#282828" fill="#DFDFDF" rx="2.5" height="90" width="121" y="1.5" x="6.5"></rect>
+                  <rect stroke-width="2" stroke="#282828" fill="#DFDFDF" rx="2" height="4" width="6" y="84" x="1"></rect>
+                </svg>
+              </div>
+              <div class="truckTires">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg">
+                  <circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle>
+                  <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg">
+                  <circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle>
+                  <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
+                </svg>
+              </div>
+              <div class="road"></div>
+              <svg xml:space="preserve" viewBox="0 0 453.459 453.459"
+                xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+                id="Capa_1" version="1.1" fill="#000000" class="lampPost">
+                <path d="M252.882,0c-37.781,0-68.686,29.953-70.245,67.358h-6.917v8.954c-26.109,2.163-45.463,10.011-45.463,19.366h9.993
+c-1.65,5.146-2.507,10.54-2.507,16.017c0,28.956,23.558,52.514,52.514,52.514c28.956,0,52.514-23.558,52.514-52.514
+c0-5.478-0.856-10.872-2.506-16.017h9.992c0-9.354-19.352-17.204-45.463-19.366v-8.954h-6.149C200.189,38.779,223.924,16,252.882,16
+c29.952,0,54.32,24.368,54.32,54.32c0,28.774-11.078,37.009-25.105,47.437c-17.444,12.968-37.216,27.667-37.216,78.884v113.914
+h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75
+v-11.202c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066c0-5.068-4.107-9.177-9.176-9.177h-0.795
+V196.641c0-43.174,14.942-54.283,30.762-66.043c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
+M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514c0-5.531,1.078-10.957,3.141-16.017
+h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <span class="brand-name">Portal VMO</span>
+      </div>
+    </div>
+
+    <div class="right-section">
+      <div class="icons"><span>📝</span><span>☑️</span><span>🔍</span></div>
+      <div class="divider"></div>
+      <div class="user-info">
+        <strong>ANDREI CERQUEIRA DE MIRANDA</strong>
+        <span>VMO — Gestão / Global TDI</span>
+      </div>
+      <div class="divider"></div>
+      <div class="region"><span>🌎 Brasil</span><span>pt-BR ▾</span><span>⏻</span></div>
+    </div>
+  </header>
+
+  <!-- Menu lateral -->
+  <div class="nav-overlay" id="navOverlay"></div>
+  <nav class="nav" id="navMenu" aria-label="Menu do Portal">
+    <a href="index.html">Início</a>
+    <a href="relatorios.html">Relatórios Diários</a>
+    <a href="neo.html">Confirmações Neo Energia</a>
+    <a href="ecomp.html">Confirmações Ecomp</a>
+    <a href="km.html">Controle de KM</a>
+    <a href="orientacoes.html">Orientações da área</a>
+    <a href="pops.html">POPS</a>
+    <a href="ocorrencias.html">Ocorrências</a>
+    <a href="matriz-controle-mensal.html">Matriz de controle mensal</a>
+    <a href="manutencao-veiculos.html">Manutenção de veículos</a>
+  </nav>
+
+  <!-- Conteúdo -->
+  <main class="content-page">
+    <div class="oc-wrap">
+      <a href="index.html" class="back-btn">← Voltar</a>
+
+      <div>
+        <h1 style="margin:0;">Ocorrências</h1>
+        <p class="oc-subtitle">
+          Controle de tratativas por e-mail (filtro rápido + status + histórico).
+        </p>
+      </div>
+
+      <!-- KPIs -->
+      <div class="oc-grid" aria-label="Resumo">
+        <div class="oc-kpi neutral">
+          <div class="label">Total</div>
+          <div class="value" id="kpiTotal">0</div>
+          <div class="hint">Total de ocorrências</div>
+        </div>
+        <div class="oc-kpi ok">
+          <div class="label">Tratadas</div>
+          <div class="value" id="kpiTratadas">0</div>
+          <div class="hint">Finalizadas</div>
+        </div>
+        <div class="oc-kpi danger">
+          <div class="label">Pendentes</div>
+          <div class="value" id="kpiPendentes">0</div>
+          <div class="hint">Em aberto</div>
+        </div>
+        <div class="oc-kpi warn">
+          <div class="label">Média (dias)</div>
+          <div class="value" id="kpiMediaDias">0</div>
+          <div class="hint">Tempo médio de tratativa</div>
+        </div>
+      </div>
+
+      <!-- Filtros -->
+      <div class="oc-toolbar">
+        <div class="oc-field">
+          <label for="search">Buscar (cliente, unidade, ocorrência, título, observações)</label>
+          <input id="search" type="text" placeholder="Ex.: Vivo, Cabreúva, portão, dispositivo, ponto..." />
+        </div>
+
+        <div class="oc-field">
+          <label for="filterCliente">Cliente</label>
+          <select id="filterCliente">
+            <option value="">Todos</option>
+          </select>
+        </div>
+
+        <div class="oc-field">
+          <label for="filterUnidade">Unidade</label>
+          <select id="filterUnidade">
+            <option value="">Todas</option>
+          </select>
+        </div>
+
+        <div class="oc-field">
+          <label for="filterStatus">Status</label>
+          <select id="filterStatus">
+            <option value="">Todos</option>
+            <option value="tratado">Tratado</option>
+            <option value="pendente">Pendente</option>
+          </select>
+        </div>
+
+        <div class="oc-actions">
+          <button class="oc-btn secondary" id="btnLimpar">Limpar filtros</button>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="oc-table-wrap" role="region" aria-label="Tabela de ocorrências">
+        <table class="oc-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Unidade</th>
+              <th>Ocorrência</th>
+              <th>Início</th>
+              <th>Fim</th>
+              <th>Dias</th>
+              <th>Status</th>
+              <th>Título do e-mail</th>
+              <th>Observações</th>
+            </tr>
+          </thead>
+          <tbody id="ocTbody">
+            <tr>
+              <td colspan="9" class="oc-empty">Carregando dados…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- JS local (manual) -->
+  <script>
+    // =========================================================
+    // ✅ DADOS MANUAIS (baseado no seu ocorrencias.xlsx)
+    // =========================================================
+    // Colunas: Cliente, Unidade, Ocorrência, Início, Fim, Tratado?, Título, Observações. [1](https://prosegur365-my.sharepoint.com/personal/br05748363_prosegur_com/_layouts/15/Doc.aspx?sourcedoc=%7BEDA5F120-D30A-4F13-880C-6F9556BFDBD2%7D&file=ocorrencias.xlsx&action=default&mobileredirect=true)
+    const ocData = [
+      {
+        cliente: "Vivo",
+        unidade: "Zona Operativa 03",
+        ocorrencia: "Erro nos aplicativos",
+        inicio: "05/01/2026",
+        fim: "04/02/2026",
+        tratado: "TRUE",
+        titulo: "VIVO - VMO ZONA OPERATIVA 03 - Erro nos aplicativos",
+        observacoes: "Aplicativos Waze e Vivo Acess não está funcionando. 29/01 Waze funcionando e Vivo Acess não"
+      },
+      {
+        cliente: "Tai Engenharia",
+        unidade: "Amazonas",
+        ocorrencia: "Falta de VMO",
+        inicio: "30/12/2025",
+        fim: "21/01/2026",
+        tratado: "TRUE",
+        titulo: "AUSÊNCIA DE VMO - TAI ENGENHARIA/AM",
+        observacoes: "O diurno VMO está de férias e o noturno foi mandado embora, está me falta de VMO"
+      },
+      {
+        cliente: "IsaCeteep",
+        unidade: "Leste",
+        ocorrencia: "Manutenção no portão",
+        inicio: "17/01/2026",
+        fim: "19/01/2026",
+        tratado: "TRUE",
+        titulo: "VMO Leste SPC - Isa Ceteep Energia LESTE",
+        observacoes: "Portão principal da unidade apresentou falhas. VMO´s estão em risco de tomar choque pela falta de manutenção"
+      },
+      {
+        cliente: "IsaCeteep",
+        unidade: "Cabreúva",
+        ocorrencia: "Revisão da viatura",
+        inicio: "15/01/2026",
+        fim: "19/01/2026",
+        tratado: "TRUE",
+        titulo: "RE: Manutenção da viatura - ISACTEEP SPI - EQUIPE 4 - CABREUVA",
+        observacoes: "Placa do veículo: TEJ6G14 - Modelo: Fiat Argo"
+      },
+      {
+        cliente: "IsaCeteep",
+        unidade: "Leste",
+        ocorrencia: "Troca de dispositivo",
+        inicio: "25/12/2025",
+        fim: "20/01/2026",
+        tratado: "TRUE",
+        titulo: "Relato de indisponibilidade de smartphone corporativo - ISACTEEP SPC - EQUIPE LESTE",
+        observacoes: "Relato de indisponibilidade de smartphone corporativo"
+      },
+      {
+        cliente: "IsaCeteep",
+        unidade: "Capão Bonito",
+        ocorrencia: "Troca de dispositivo",
+        inicio: "05/01/2026",
+        fim: "20/01/2026",
+        tratado: "TRUE",
+        titulo: "[ISACTEEP - CAPÃO BONITO] DISPOSITIVO INOPERANTE",
+        observacoes: "Celular corporativo em mal estado de uso"
+      },
+      {
+        cliente: "Tai Engenharia",
+        unidade: "Amazonas",
+        ocorrencia: "Liberação de acesso",
+        inicio: "21/01/2026",
+        fim: "27/01/2026",
+        tratado: "TRUE",
+        titulo: "Liberação de Acesso POPS Mobility – Tai Engenharia",
+        observacoes: "Colaborador que realizará a cobertura necessita de acesso ao POPS Mobility."
+      },
+      {
+        cliente: "IsaCeteep",
+        unidade: "Norte",
+        ocorrencia: "Portão da Isa Norte quebrado",
+        inicio: "23/01/2026",
+        fim: "27/01/2026",
+        tratado: "TRUE",
+        titulo: "Isa Ceteep Energia - Equipe Leste - Unidade Norte",
+        observacoes: "Foi informado que no período noturno os VMO´s estão ficando na Isa Norte desde Dezembro/2025 devido à portão quebrado e que não foi concertado ainda"
+      },
+      {
+        cliente: "Vivo",
+        unidade: "Zona Operativa 02",
+        ocorrencia: "Problema para marcar o ponto",
+        inicio: "27/01/2026",
+        fim: "06/02/2026",
+        tratado: "TRUE",
+        titulo: "VIVO - VMO ZONA OPERATIVA 02 - Liberação de marcação de ponto - POPS ID",
+        observacoes: "Celular não está permitindo realizar a marcação de ponto"
+      },
+      {
+        cliente: "IsaCteep",
+        unidade: "IsaCteep - Cabreúva",
+        ocorrencia: "Manutenção farol da viatura",
+        inicio: "10/02/2026",
+        fim: "10/02/2026",
+        tratado: "TRUE",
+        titulo: "Manutenção da viatura - ISACTEEP SPI - EQUIPE 4 - CABREUVA",
+        observacoes: "Farol direito queimado. Resolvido no mesmo dia."
+      },
+      {
+        cliente: "Ecomp",
+        unidade: "Tbg Guararema",
+        ocorrencia: "Crachá inoperante",
+        inicio: "10/02/2026",
+        fim: "",
+        tratado: "FALSE",
+        titulo: "",
+        observacoes: ""
+      }
+    ];
+
+    // -----------------------------
+    // Utilitários
+    // -----------------------------
+    const $ = (id) => document.getElementById(id);
+    const tbody = $("ocTbody");
+
+    const search = $("search");
+    const filterCliente = $("filterCliente");
+    const filterUnidade = $("filterUnidade");
+    const filterStatus = $("filterStatus");
+
+    function normalize(s){ return (s || "").toString().trim().toLowerCase(); }
+
+    function parseBRDate(d){
+      // d: "DD/MM/AAAA" → Date
+      if (!d) return null;
+      const [dd, mm, yyyy] = d.split("/");
+      if (!dd || !mm || !yyyy) return null;
+      return new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+    }
+
+    function diffDays(inicio, fim){
+      const di = parseBRDate(inicio);
+      const df = parseBRDate(fim);
+      if (!di || !df) return "";
+      const ms = df.getTime() - di.getTime();
+      return Math.max(0, Math.round(ms / (1000*60*60*24)));
+    }
+
+    function statusBadge(row){
+      const tratado = normalize(row.tratado) === "true";
+      if (tratado) return { text: "Tratado", cls: "ok" };
+      return { text: "Pendente", cls: "danger" };
+    }
+
+    function updateKpis(all){
+      const total = all.length;
+      const tratadas = all.filter(r => normalize(r.tratado) === "true").length;
+      const pendentes = all.filter(r => normalize(r.tratado) !== "true").length;
+
+      // média de dias apenas das tratadas com fim preenchido
+      const diasList = all
+        .filter(r => normalize(r.tratado) === "true" && r.inicio && r.fim)
+        .map(r => diffDays(r.inicio, r.fim))
+        .filter(v => v !== "" && !Number.isNaN(v));
+
+      const media = diasList.length ? Math.round(diasList.reduce((a,b) => a + b, 0) / diasList.length) : 0;
+
+      $("kpiTotal").textContent = total;
+      $("kpiTratadas").textContent = tratadas;
+      $("kpiPendentes").textContent = pendentes;
+      $("kpiMediaDias").textContent = media;
+    }
+
+    function renderTable(list){
+      tbody.innerHTML = "";
+
+      if (!list.length){
+        tbody.innerHTML = `<tr><td colspan="9" class="oc-empty">Nenhuma ocorrência encontrada com os filtros atuais.</td></tr>`;
+        return;
+      }
+
+      list.forEach(row => {
+        const st = statusBadge(row);
+        const dias = diffDays(row.inicio, row.fim);
+
+        const titulo = (row.titulo || "").toString();
+        const obs = (row.observacoes || "").toString();
+
+        const shortTit = titulo.length > 45 ? titulo.slice(0,45) + "..." : (titulo || "—");
+        const shortObs = obs.length > 55 ? obs.slice(0,55) + "..." : (obs || "—");
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.cliente || "—"}</td>
+          <td>${row.unidade || "—"}</td>
+          <td><strong>${row.ocorrencia || "—"}</strong></td>
+          <td>${row.inicio || "—"}</td>
+          <td>${row.fim || "—"}</td>
+          <td>${dias === "" ? "—" : dias}</td>
+          <td><span class="badge ${st.cls}">${st.text}</span></td>
+          <td>
+            <div>${shortTit}</div>
+            ${titulo && titulo.length > 45 ? `<span class="oc-more" data-full="${encodeURIComponent(titulo)}">ver mais</span>` : ""}
+          </td>
+          <td>
+            <div>${shortObs}</div>
+            ${obs && obs.length > 55 ? `<span class="oc-more" data-full="${encodeURIComponent(obs)}">ver mais</span>` : ""}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll(".oc-more").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const full = decodeURIComponent(btn.getAttribute("data-full"));
+          alert(full);
+        });
+      });
+    }
+
+    function populateFilters(all){
+      // Cliente
+      const clientes = [...new Set(all.map(r => r.cliente).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+      const unidades = [...new Set(all.map(r => r.unidade).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+
+      // limpa (mantendo "Todos")
+      filterCliente.innerHTML = `<option value="">Todos</option>`;
+      clientes.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = normalize(c);
+        opt.textContent = c;
+        filterCliente.appendChild(opt);
+      });
+
+      filterUnidade.innerHTML = `<option value="">Todas</option>`;
+      unidades.forEach(u => {
+        const opt = document.createElement("option");
+        opt.value = normalize(u);
+        opt.textContent = u;
+        filterUnidade.appendChild(opt);
+      });
+    }
+
+    function applyFilters(){
+      const q = normalize(search.value);
+      const c = normalize(filterCliente.value);
+      const u = normalize(filterUnidade.value);
+      const st = normalize(filterStatus.value);
+
+      const filtered = ocData.filter(row => {
+        const text = normalize(`${row.cliente} ${row.unidade} ${row.ocorrencia} ${row.titulo} ${row.observacoes}`);
+
+        if (q && !text.includes(q)) return false;
+        if (c && normalize(row.cliente) !== c) return false;
+        if (u && normalize(row.unidade) !== u) return false;
+
+        if (st){
+          const tratado = normalize(row.tratado) === "true";
+          if (st === "tratado" && !tratado) return false;
+          if (st === "pendente" && tratado) return false;
+        }
+
+        return true;
+      });
+
+      renderTable(filtered);
+      updateKpis(ocData); // KPIs do total carregado
+    }
+
+    // Eventos
+    ["input","change"].forEach(evt => {
+      search.addEventListener(evt, applyFilters);
+      filterCliente.addEventListener(evt, applyFilters);
+      filterUnidade.addEventListener(evt, applyFilters);
+      filterStatus.addEventListener(evt, applyFilters);
+    });
+
+    $("btnLimpar").addEventListener("click", () => {
+      search.value = "";
+      filterCliente.value = "";
+      filterUnidade.value = "";
+      filterStatus.value = "";
+      applyFilters();
+    });
+
+    // Inicializa
+    populateFilters(ocData);
+    applyFilters();
+  </script>
+
+</body>
+</html>

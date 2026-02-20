@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matriz de controle mensal — Portal VMO</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+
+  <!-- Estilo local (só desta página) -->
+  <style>
+    .mx-wrap { display:flex; flex-direction:column; gap:16px; }
+    .mx-subtitle { margin-top:6px; color:#666; }
+
+    .mx-grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .mx-kpi{
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.06);
+      border-left:6px solid #f2c200;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-height:72px;
+    }
+    .mx-kpi.ok{ border-left-color:#2ecc71; }
+    .mx-kpi.warn{ border-left-color:#f39c12; }
+    .mx-kpi.danger{ border-left-color:#e74c3c; }
+    .mx-kpi.neutral{ border-left-color:#95a5a6; }
+    .mx-kpi .label{ font-size:12px; color:#666; font-weight:800; text-transform:uppercase; letter-spacing:.3px; }
+    .mx-kpi .value{ font-size:26px; font-weight:900; color:#222; line-height:1; }
+    .mx-kpi .hint{ font-size:12px; color:#777; }
+
+    .mx-toolbar{
+      display:grid;
+      grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+      gap:10px;
+      align-items:end;
+      margin-top:6px;
+    }
+    .mx-field label{
+      display:block;
+      font-size:12px;
+      color:#666;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+    .mx-field input, .mx-field select{
+      width:100%;
+      padding:10px 10px;
+      border-radius:10px;
+      border:1px solid #e4e4e4;
+      outline:none;
+      font-family:inherit;
+      font-size:14px;
+      background:#fff;
+      box-sizing:border-box;
+    }
+
+    .mx-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .mx-btn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      border-radius:10px;
+      padding:10px 12px;
+      font-weight:900;
+      background:#f2c200;
+      color:#222;
+      box-shadow:0 10px 20px rgba(0,0,0,0.08);
+      transition:transform .2s ease, opacity .2s ease;
+      white-space:nowrap;
+    }
+    .mx-btn:hover{ transform: translateY(-1px); opacity:.95; }
+    .mx-btn.secondary{ background:#f3f3f3; }
+
+    .mx-note{
+      background:#fff7d1;
+      border:1px solid rgba(242,194,0,.35);
+      padding:10px 12px;
+      border-radius:12px;
+      color:#444;
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .mx-panels{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .mx-panel{
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.06);
+      border:1px solid #eee;
+      padding:14px;
+    }
+    .mx-panel h3{
+      margin:0 0 10px 0;
+      font-size:14px;
+      color:#222;
+      letter-spacing:.2px;
+    }
+    .mx-list{
+      margin:0;
+      padding-left:18px;
+      color:#444;
+      line-height:1.6;
+      font-size:13px;
+    }
+    .mx-list li{ margin:6px 0; }
+
+    .mx-table-wrap{
+      background:#fff;
+      border-radius:12px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.06);
+      overflow:hidden;
+      border:1px solid #eee;
+    }
+    table.mx-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+    .mx-table thead th{
+      text-align:left;
+      padding:12px;
+      background:#fafafa;
+      border-bottom:1px solid #eee;
+      color:#333;
+      font-weight:900;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+    .mx-table tbody td{
+      padding:12px;
+      border-bottom:1px solid #f0f0f0;
+      vertical-align:top;
+      color:#333;
+    }
+    .mx-table tbody tr:hover{
+      background: rgba(242,194,0,0.08);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:12px;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+    .badge.ok{ background: rgba(46,204,113,.12); color:#1f7a43; border-color: rgba(46,204,113,.25); }
+    .badge.warn{ background: rgba(243,156,18,.12); color:#8a5a07; border-color: rgba(243,156,18,.25); }
+    .badge.danger{ background: rgba(231,76,60,.12); color:#8c2b22; border-color: rgba(231,76,60,.25); }
+    .badge.neutral{ background: rgba(149,165,166,.14); color:#4b5a5a; border-color: rgba(149,165,166,.25); }
+
+    .mx-empty{
+      padding:16px;
+      color:#666;
+      font-size:13px;
+    }
+
+    @media (max-width: 980px){
+      .mx-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .mx-toolbar{ grid-template-columns: 1fr 1fr; }
+      .mx-panels{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px){
+      .mx-grid{ grid-template-columns: 1fr; }
+      .mx-toolbar{ grid-template-columns: 1fr; }
+      .mx-actions{ justify-content: stretch; }
+      .mx-btn{ width:100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="left-section">
+      <div class="hamburger" id="menuToggle" role="button" tabindex="0" aria-controls="navMenu" aria-expanded="false">☰</div>
+
+      <div class="brand">
+        <div class="brand-loader-container" aria-hidden="true">
+          <div class="loader">
+            <div class="truckWrapper">
+              <div class="truckBody">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 198 93" class="trucksvg">
+                  <path stroke-width="3" stroke="#282828" fill="#F83D3D"
+                    d="M135 22.5H177.264C178.295 22.5 179.22 23.133 179.594 24.0939L192.33 56.8443C192.442 57.1332 192.5 57.4404 192.5 57.7504V89C192.5 90.3807 191.381 91.5 190 91.5H135C133.619 91.5 132.5 90.3807 132.5 89V25C132.5 23.6193 133.619 22.5 135 22.5Z"></path>
+                  <path stroke-width="3" stroke="#282828" fill="#7D7C7C"
+                    d="M146 33.5H181.741C182.779 33.5 183.709 34.1415 184.078 35.112L190.538 52.112C191.16 53.748 189.951 55.5 188.201 55.5H146C144.619 55.5 143.5 54.3807 143.5 53V36C143.5 34.6193 144.619 33.5 146 33.5Z"></path>
+                  <path stroke-width="2" stroke="#282828" fill="#282828"
+                    d="M150 65C150 65.39 149.763 65.8656 149.127 66.2893C148.499 66.7083 147.573 67 146.5 67C145.427 67 144.501 66.7083 143.873 66.2893C143.237 65.8656 143 65.39 143 65C143 64.61 143.237 64.1344 143.873 63.7107C144.501 63.2917 145.427 63 146.5 63C147.573 63 148.499 63.2917 149.127 63.7107C149.763 64.1344 150 64.61 150 65Z"></path>
+                  <rect stroke-width="2" stroke="#282828" fill="#FFFCAB" rx="1" height="7" width="5" y="63" x="187"></rect>
+                  <rect stroke-width="2" stroke="#282828" fill="#282828" rx="1" height="11" width="4" y="81" x="193"></rect>
+                  <rect stroke-width="3" stroke="#282828" fill="#DFDFDF" rx="2.5" height="90" width="121" y="1.5" x="6.5"></rect>
+                  <rect stroke-width="2" stroke="#282828" fill="#DFDFDF" rx="2" height="4" width="6" y="84" x="1"></rect>
+                </svg>
+              </div>
+              <div class="truckTires">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg">
+                  <circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle>
+                  <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 30" class="tiresvg">
+                  <circle stroke-width="3" stroke="#282828" fill="#282828" r="13.5" cy="15" cx="15"></circle>
+                  <circle fill="#DFDFDF" r="7" cy="15" cx="15"></circle>
+                </svg>
+              </div>
+              <div class="road"></div>
+              <svg xml:space="preserve" viewBox="0 0 453.459 453.459"
+                xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+                id="Capa_1" version="1.1" fill="#000000" class="lampPost">
+                <path d="M252.882,0c-37.781,0-68.686,29.953-70.245,67.358h-6.917v8.954c-26.109,2.163-45.463,10.011-45.463,19.366h9.993
+c-1.65,5.146-2.507,10.54-2.507,16.017c0,28.956,23.558,52.514,52.514,52.514c28.956,0,52.514-23.558,52.514-52.514
+c0-5.478-0.856-10.872-2.506-16.017h9.992c0-9.354-19.352-17.204-45.463-19.366v-8.954h-6.149C200.189,38.779,223.924,16,252.882,16
+c29.952,0,54.32,24.368,54.32,54.32c0,28.774-11.078,37.009-25.105,47.437c-17.444,12.968-37.216,27.667-37.216,78.884v113.914
+h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75
+v-11.202c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066c0-5.068-4.107-9.177-9.176-9.177h-0.795
+V196.641c0-43.174,14.942-54.283,30.762-66.043c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
+M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514c0-5.531,1.078-10.957,3.141-16.017
+h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <span class="brand-name">Portal VMO</span>
+      </div>
+    </div>
+
+    <div class="right-section">
+      <div class="icons"><span>📝</span><span>☑️</span><span>🔍</span></div>
+      <div class="divider"></div>
+      <div class="user-info">
+        <strong>ANDREI CERQUEIRA DE MIRANDA</strong>
+        <span>VMO — Gestão / Global TDI</span>
+      </div>
+      <div class="divider"></div>
+      <div class="region"><span>🌎 Brasil</span><span>pt-BR ▾</span><span>⏻</span></div>
+    </div>
+  </header>
+
+  <!-- Menu lateral -->
+   <div class="nav-overlay" id="navOverlay"></div>
+  <nav class="nav" id="navMenu" aria-label="Menu do Portal">
+    <a href="index.html">Início</a>
+    <a href="relatorios.html">Relatórios Diários</a>
+    <a href="neo.html">Confirmações Neo Energia</a>
+    <a href="ecomp.html">Confirmações Ecomp</a>
+    <a href="km.html">Controle de KM</a>
+    <a href="orientacoes.html">Orientações da área</a>
+    <a href="pops.html">POPS</a>
+    <a href="ocorrencias.html">Ocorrências</a>
+    <a href="matriz-controle-mensal.html">Matriz de controle mensal</a>
+    <a href="manutencao-veiculos.html">Manutenção de veículos</a>
+  </nav>
+
+  <main class="content-page">
+    <div class="mx-wrap">
+      <a href="index.html" class="back-btn">← Voltar</a>
+
+      <div>
+        <h1 style="margin:0;">Matriz de controle mensal (KM)</h1>
+        <p class="mx-subtitle">
+          Objetivo: identificar rapidamente quem <strong>já excedeu</strong>, quem <strong>vai exceder</strong> e quem está <strong>dentro do esperado</strong>.
+        </p>
+      </div>
+
+      <div class="mx-note">
+        ✅ Os dados são <strong>manuais no código</strong>.  
+        Cada item precisa ter: <em>mês, equipe, kmContratado, kmDisponivelDia, kmPermitidoAteMomento, rodadoAteMomento</em>.  
+        O sistema calcula automaticamente: <strong>desvio</strong>, <strong>projeção</strong> e <strong>status</strong>.
+      </div>
+
+      <!-- KPIs -->
+      <div class="mx-grid" aria-label="Resumo">
+        <div class="mx-kpi neutral">
+          <div class="label">Total de equipes</div>
+          <div class="value" id="kpiTotal">0</div>
+          <div class="hint">No mês selecionado</div>
+        </div>
+        <div class="mx-kpi danger">
+          <div class="label">Excedeu</div>
+          <div class="value" id="kpiExcedeu">0</div>
+          <div class="hint">KM já passou do contratado</div>
+        </div>
+        <div class="mx-kpi warn">
+          <div class="label">Vai exceder</div>
+          <div class="value" id="kpiVaiExceder">0</div>
+          <div class="hint">Projeção do mês ultrapassa</div>
+        </div>
+        <div class="mx-kpi ok">
+          <div class="label">Dentro</div>
+          <div class="value" id="kpiDentro">0</div>
+          <div class="hint">Dentro do esperado</div>
+        </div>
+      </div>
+
+      <!-- Filtros -->
+      <div class="mx-toolbar">
+        <div class="mx-field">
+          <label for="search">Buscar (equipe)</label>
+          <input id="search" type="text" placeholder="Ex.: CABREUVA, TELEFÔNICA, QUEPAR..." />
+        </div>
+
+        <div class="mx-field">
+          <label for="filterMes">Mês</label>
+          <select id="filterMes">
+            <option value="2026-01">Janeiro - 2026</option>
+            <option value="2026-02">Fevereiro - 2026</option>
+            <option value="2026-01">Março - 2026</option>
+            <option value="2026-01">Abril - 2026</option>
+            <option value="2026-01">Maio - 2026</option>
+            <option value="2026-01">Junho - 2026</option>
+            <option value="2026-01">Julho - 2026</option>
+            <option value="2026-01">Agosto - 2026</option>
+            <option value="2026-01">Setembro - 2026</option>
+            <option value="2026-01">Outubro - 2026</option>
+            <option value="2026-01">Novembro - 2026</option>
+            <option value="2026-01">Dezembro - 2026</option>
+          </select>
+        </div>
+
+        <div class="mx-field">
+          <label for="filterStatus">Status</label>
+          <select id="filterStatus">
+            <option value="">Todos</option>
+            <option value="excedeu">Excedeu</option>
+            <option value="vai_exceder">Vai exceder</option>
+            <option value="dentro">Dentro</option>
+          </select>
+        </div>
+
+        <div class="mx-field">
+          <label for="sortBy">Ordenar</label>
+          <select id="sortBy">
+            <option value="risco_desc">Maior risco</option>
+            <option value="desvio_desc">Maior desvio</option>
+            <option value="rodado_desc">Maior rodado</option>
+            <option value="equipe_asc">Equipe A-Z</option>
+          </select>
+        </div>
+
+        <div class="mx-actions">
+          <button class="mx-btn secondary" id="btnLimpar">Limpar</button>
+        </div>
+      </div>
+
+      <!-- Painéis objetivos -->
+      <div class="mx-panels">
+        <div class="mx-panel">
+          <h3>⚠️ Top riscos (projeção)</h3>
+          <ul class="mx-list" id="topRiscos">
+            <li>—</li>
+          </ul>
+        </div>
+        <div class="mx-panel">
+          <h3>✅ Dentro do esperado</h3>
+          <ul class="mx-list" id="topDentro">
+            <li>—</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="mx-table-wrap" role="region" aria-label="Tabela de matriz mensal">
+        <table class="mx-table">
+          <thead>
+            <tr>
+              <th>Equipe</th>
+              <th>KM contratado</th>
+              <th>KM/dia (contrato)</th>
+              <th>Permitido até o momento</th>
+              <th>Rodado até o momento</th>
+              <th>Desvio (rodado - permitido)</th>
+              <th>Projeção fim do mês</th>
+              <th>Saldo (contratado - projeção)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="mxTbody">
+            <tr><td colspan="9" class="mx-empty">Carregando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // =========================================================
+    // ✅ DADOS MANUAIS (VOCÊ VAI PREENCHER AQUI)
+    // =========================================================
+    // Formato:
+    // { mes:"2026-02", equipe:"...", kmContratado:3200, kmDisponivelDia:114, kmPermitidoAteMomento:892, rodadoAteMomento:2308 }
+    //
+    // 👉 Cole Janeiro e Fevereiro aqui (pode ter várias linhas por mês).
+    //
+    const matrixData = [
+   // ========= JANEIRO/2026 =========
+    { mes: "2026-01", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 25.81, kmPermitidoAteMomento: 800, rodadoAteMomento: 567 },
+    { mes: "2026-01", equipe: "ISACTEEP SPC - EQUIPE INTERLAGOS", kmContratado: 500, kmDisponivelDia: 16.13, kmPermitidoAteMomento: 500, rodadoAteMomento: 371 },
+    { mes: "2026-01", equipe: "ISACTEEP SPC - EQUIPE JANDIRA", kmContratado: 1150, kmDisponivelDia: 37.1, kmPermitidoAteMomento: 1150, rodadoAteMomento: 1834 },
+    { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO", kmContratado: 3700, kmDisponivelDia: 119.35, kmPermitidoAteMomento: 3700, rodadoAteMomento: 919 },
+    { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE 2 - SAO JOAO DA B.V", kmContratado: 3200, kmDisponivelDia: 103.23, kmPermitidoAteMomento: 3200, rodadoAteMomento: 4161 },
+    { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE 3 - BRAGANÇA PAULISTA", kmContratado: 520, kmDisponivelDia: 16.77, kmPermitidoAteMomento: 520, rodadoAteMomento: 3244 },
+    { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE 4 - CABREUVA", kmContratado: 1925, kmDisponivelDia: 62.1, kmPermitidoAteMomento: 1925, rodadoAteMomento: 2724 },
+    { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE BAIXADA", kmContratado: 300, kmDisponivelDia: 9.68, kmPermitidoAteMomento: 300, rodadoAteMomento: 445 },
+    { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE LORENA", kmContratado: 1400, kmDisponivelDia: 45.16, kmPermitidoAteMomento: 1400, rodadoAteMomento: 197 },
+    { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE - SUMARÉ", kmContratado: 2725, kmDisponivelDia: 87.9, kmPermitidoAteMomento: 2725, rodadoAteMomento: 2195 },
+    { mes: "2026-01", equipe: "Zona Operativa 1 - Telefônica", kmContratado: 4500, kmDisponivelDia: 145.16, kmPermitidoAteMomento: 4500, rodadoAteMomento: 4933 },
+    { mes: "2026-01", equipe: "Zona Operativa 2 - Telefônica", kmContratado: 4500, kmDisponivelDia: 145.16, kmPermitidoAteMomento: 4500, rodadoAteMomento: 1764 },
+    { mes: "2026-01", equipe: "Zona Operativa 3 - Telefônica", kmContratado: 4500, kmDisponivelDia: 145.16, kmPermitidoAteMomento: 4500, rodadoAteMomento: 3508 },
+    { mes: "2026-01", equipe: "Zona Operativa 4 - Telefônica", kmContratado: 4500, kmDisponivelDia: 145.16, kmPermitidoAteMomento: 4500, rodadoAteMomento: 2645 },
+    { mes: "2026-01", equipe: "Zona Operativa Interior - Telefônica", kmContratado: 4500, kmDisponivelDia: 145.16, kmPermitidoAteMomento: 4500, rodadoAteMomento: 5529 },
+    { mes: "2026-01", equipe: "EQUIPE VMO - QUEPAR - ALAGOAS", kmContratado: 1000, kmDisponivelDia: 32.26, kmPermitidoAteMomento: 1000, rodadoAteMomento: 2509 },
+    { mes: "2026-01", equipe: "EQUIPE VMO - QUEPAR - Bahia", kmContratado: 1000, kmDisponivelDia: 32.26, kmPermitidoAteMomento: 1000, rodadoAteMomento: 1305 },
+    { mes: "2026-01", equipe: "VMO - AMAZONAS", kmContratado: 434, kmDisponivelDia: 14.0, kmPermitidoAteMomento: 434, rodadoAteMomento: 1128 },
+    { mes: "2026-01", equipe: "VMO - TBG - GUARAREMA", kmContratado: 11000, kmDisponivelDia: 354.84, kmPermitidoAteMomento: 11000, rodadoAteMomento: 15223 },
+    { mes: "2026-01", equipe: "GLP - RJ", kmContratado: 1500, kmDisponivelDia: 48.39, kmPermitidoAteMomento: 1500, rodadoAteMomento: 6493 },
+
+    // ========= FEVEREIRO/2026 =========
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 29, kmPermitidoAteMomento: 580, rodadoAteMomento: 248 },
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE INTERLAGOS", kmContratado: 500, kmDisponivelDia: 18, kmPermitidoAteMomento: 360, rodadoAteMomento: 187 },
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE JANDIRA", kmContratado: 1150, kmDisponivelDia: 41, kmPermitidoAteMomento: 820, rodadoAteMomento: 324 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO", kmContratado: 3700, kmDisponivelDia: 132, kmPermitidoAteMomento: 2640, rodadoAteMomento: 4 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 2 - SAO JOAO DA B.V", kmContratado: 3200, kmDisponivelDia: 114, kmPermitidoAteMomento: 2280, rodadoAteMomento: 2308 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 3 - BRAGANÇA PAULISTA", kmContratado: 520, kmDisponivelDia: 19, kmPermitidoAteMomento: 380, rodadoAteMomento: 1754 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 4 - CABREUVA", kmContratado: 1925, kmDisponivelDia: 69, kmPermitidoAteMomento: 1380, rodadoAteMomento: 1562 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE BAIXADA", kmContratado: 300, kmDisponivelDia: 11, kmPermitidoAteMomento: 220, rodadoAteMomento: 211 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE LORENA", kmContratado: 1400, kmDisponivelDia: 50, kmPermitidoAteMomento: 1000, rodadoAteMomento: 87 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE - SUMARÉ", kmContratado: 2725, kmDisponivelDia: 97, kmPermitidoAteMomento: 1940, rodadoAteMomento: 1515 },
+    { mes: "2026-02", equipe: "Zona Operativa 1 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2499 },
+    { mes: "2026-02", equipe: "Zona Operativa 2 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 1214 },
+    { mes: "2026-02", equipe: "Zona Operativa 3 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2039 },
+    { mes: "2026-02", equipe: "Zona Operativa 4 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 1688 },
+    { mes: "2026-02", equipe: "Zona Operativa Interior - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 3171 },
+    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - ALAGOAS", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 1472 },
+    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - Bahia", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 511 },
+    { mes: "2026-02", equipe: "VMO - AMAZONAS", kmContratado: 434, kmDisponivelDia: 16, kmPermitidoAteMomento: 320, rodadoAteMomento: 615 },
+    { mes: "2026-02", equipe: "VMO - TBG - GUARAREMA", kmContratado: 11000, kmDisponivelDia: 393, kmPermitidoAteMomento: 7860, rodadoAteMomento: 5572 },
+    { mes: "2026-02", equipe: "GLP - RJ", kmContratado: 1500, kmDisponivelDia: 54, kmPermitidoAteMomento: 1080, rodadoAteMomento: 3933 },
+    ];
+
+    // =======================
+    // Lógica / Interação
+    // =======================
+    const $ = (id) => document.getElementById(id);
+
+    const tbody = $("mxTbody");
+    const search = $("search");
+    const filterMes = $("filterMes");
+    const filterStatus = $("filterStatus");
+    const sortBy = $("sortBy");
+
+    function normalize(s){ return (s || "").toString().trim().toLowerCase(); }
+
+    function daysInMonth(yyyy, mm){
+      return new Date(yyyy, mm, 0).getDate(); // mm: 1..12
+    }
+
+    function inferDaysPassed(row){
+      // inferindo pelos dados que já têm "permitido até o momento"
+      // diasPassados ≈ permitido / kmDia
+      if (!row.kmDisponivelDia || !row.kmPermitidoAteMomento) return 0;
+      const d = row.kmPermitidoAteMomento / row.kmDisponivelDia;
+      return Math.max(1, Math.round(d));
+    }
+
+    function calcRow(row){
+      const [yyyy, mmStr] = row.mes.split("-");
+      const mm = Number(mmStr); // 1..12
+      const totalDays = daysInMonth(Number(yyyy), mm);
+      const daysPassed = inferDaysPassed(row);
+
+      const permitido = Number(row.kmPermitidoAteMomento || 0);
+      const rodado = Number(row.rodadoAteMomento || 0);
+      const contratado = Number(row.kmContratado || 0);
+
+      const desvio = rodado - permitido; // >0: acima do permitido até o momento
+      const avgDia = daysPassed ? (rodado / daysPassed) : 0;
+      const projFim = Math.round(avgDia * totalDays);
+
+      const saldo = contratado - projFim;
+
+      let status = "dentro";
+      if (rodado > contratado) status = "excedeu";
+      else if (projFim > contratado) status = "vai_exceder";
+
+      // risco: quanto mais negativo o saldo, maior risco.
+      const risco = -saldo;
+
+      return { ...row, totalDays, daysPassed, desvio, avgDia, projFim, saldo, status, risco };
+    }
+
+    function badgeFor(status){
+      if (status === "excedeu") return { text:"Excedeu", cls:"danger" };
+      if (status === "vai_exceder") return { text:"Vai exceder", cls:"warn" };
+      return { text:"Dentro", cls:"ok" };
+    }
+
+    function updateKpis(list){
+      const total = list.length;
+      const excedeu = list.filter(r => r.status === "excedeu").length;
+      const vai = list.filter(r => r.status === "vai_exceder").length;
+      const dentro = list.filter(r => r.status === "dentro").length;
+
+      $("kpiTotal").textContent = total;
+      $("kpiExcedeu").textContent = excedeu;
+      $("kpiVaiExceder").textContent = vai;
+      $("kpiDentro").textContent = dentro;
+    }
+
+    function renderPanels(list){
+      const riscos = list
+        .filter(r => r.status !== "dentro")
+        .sort((a,b) => b.risco - a.risco)
+        .slice(0, 5);
+
+      const dentro = list
+        .filter(r => r.status === "dentro")
+        .sort((a,b) => b.saldo - a.saldo)
+        .slice(0, 5);
+
+      const ulR = $("topRiscos");
+      const ulD = $("topDentro");
+
+      ulR.innerHTML = riscos.length
+        ? riscos.map(r => `<li><strong>${r.equipe}</strong> — projeção ${r.projFim} km | saldo ${r.saldo} km</li>`).join("")
+        : "<li>—</li>";
+
+      ulD.innerHTML = dentro.length
+        ? dentro.map(r => `<li><strong>${r.equipe}</strong> — projeção ${r.projFim} km | sobra ${r.saldo} km</li>`).join("")
+        : "<li>—</li>";
+    }
+
+    function renderTable(list){
+      tbody.innerHTML = "";
+      if (!list.length){
+        tbody.innerHTML = `<tr><td colspan="9" class="mx-empty">Sem dados para este mês (ou filtros atuais).</td></tr>`;
+        return;
+      }
+
+      list.forEach(r => {
+        const b = badgeFor(r.status);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${r.equipe}</strong></td>
+          <td>${r.kmContratado}</td>
+          <td>${r.kmDisponivelDia}</td>
+          <td>${r.kmPermitidoAteMomento}</td>
+          <td>${r.rodadoAteMomento}</td>
+          <td>${r.desvio}</td>
+          <td>${r.projFim}</td>
+          <td>${r.saldo}</td>
+          <td><span class="badge ${b.cls}">${b.text}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function applyFilters(){
+      const q = normalize(search.value);
+      const mes = filterMes.value;
+      const st = filterStatus.value;
+      const sort = sortBy.value;
+
+      const base = matrixData
+        .filter(r => r.mes === mes)
+        .map(calcRow)
+        .filter(r => {
+          if (q && !normalize(r.equipe).includes(q)) return false;
+          if (st && r.status !== st) return false;
+          return true;
+        });
+
+      // ordenação
+      base.sort((a,b) => {
+        if (sort === "risco_desc") return b.risco - a.risco;
+        if (sort === "desvio_desc") return b.desvio - a.desvio;
+        if (sort === "rodado_desc") return b.rodadoAteMomento - a.rodadoAteMomento;
+        if (sort === "equipe_asc") return a.equipe.localeCompare(b.equipe, "pt-BR");
+        return 0;
+      });
+
+      updateKpis(base);
+      renderPanels(base);
+      renderTable(base);
+    }
+
+    // Eventos
+    ["input","change"].forEach(evt => {
+      search.addEventListener(evt, applyFilters);
+      filterMes.addEventListener(evt, applyFilters);
+      filterStatus.addEventListener(evt, applyFilters);
+      sortBy.addEventListener(evt, applyFilters);
+    });
+
+    $("btnLimpar").addEventListener("click", () => {
+      search.value = "";
+      filterStatus.value = "";
+      sortBy.value = "risco_desc";
+      applyFilters();
+    });
+
+    // Inicializa
+    applyFilters();
+  </script>
+
+</body>
+</html>
