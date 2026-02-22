@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ocorrências — Portal VMO</title>
+
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
 
@@ -17,6 +18,11 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap:12px;
       margin-top:10px;
+    }
+
+    .oc-grid.crit{
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top:0;
     }
 
     .oc-kpi{
@@ -41,11 +47,12 @@
 
     .oc-toolbar{
       display:grid;
-      grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1fr 1fr auto;
       gap:10px;
       align-items:end;
       margin-top:6px;
     }
+
     .oc-field label{
       display:block;
       font-size:12px;
@@ -53,6 +60,7 @@
       font-weight:800;
       margin-bottom:6px;
     }
+
     .oc-field input, .oc-field select{
       width:100%;
       padding:10px 10px;
@@ -87,7 +95,6 @@
       white-space:nowrap;
     }
     .oc-btn:hover{ transform: translateY(-1px); opacity:.95; }
-
     .oc-btn.secondary{ background:#f3f3f3; }
 
     .oc-table-wrap{
@@ -158,12 +165,43 @@
       font-size:13px;
     }
 
+    /* Criticidade (seletor colorido) */
+    .crit-select{
+      width: 100%;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid #e4e4e4;
+      font-weight:900;
+      outline:none;
+      background:#fff;
+      cursor:pointer;
+      appearance:none;
+    }
+    .crit-select.baixa{
+      background: rgba(46,204,113,.12);
+      border-color: rgba(46,204,113,.25);
+      color:#1f7a43;
+    }
+    .crit-select.media{
+      background: rgba(243,156,18,.14);
+      border-color: rgba(243,156,18,.28);
+      color:#8a5a00;
+    }
+    .crit-select.alta{
+      background: rgba(231,76,60,.12);
+      border-color: rgba(231,76,60,.25);
+      color:#8c2b22;
+    }
+
     @media (max-width: 980px){
       .oc-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .oc-grid.crit{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .oc-toolbar{ grid-template-columns: 1fr 1fr; }
     }
+
     @media (max-width: 560px){
       .oc-grid{ grid-template-columns: 1fr; }
+      .oc-grid.crit{ grid-template-columns: 1fr; }
       .oc-toolbar{ grid-template-columns: 1fr; }
       .oc-actions{ justify-content: stretch; }
       .oc-btn{ width:100%; }
@@ -172,12 +210,10 @@
 </head>
 
 <body>
-
   <!-- Topbar (mesma pegada do portal) -->
   <header class="topbar">
     <div class="left-section">
       <div class="hamburger" id="menuToggle" role="button" tabindex="0" aria-controls="navMenu" aria-expanded="false">☰</div>
-
       <div class="brand">
         <div class="brand-loader-container" aria-hidden="true">
           <div class="loader">
@@ -214,16 +250,17 @@
 c-1.65,5.146-2.507,10.54-2.507,16.017c0,28.956,23.558,52.514,52.514,52.514c28.956,0,52.514-23.558,52.514-52.514
 c0-5.478-0.856-10.872-2.506-16.017h9.992c0-9.354-19.352-17.204-45.463-19.366v-8.954h-6.149C200.189,38.779,223.924,16,252.882,16
 c29.952,0,54.32,24.368,54.32,54.32c0,28.774-11.078,37.009-25.105,47.437c-17.444,12.968-37.216,27.667-37.216,78.884v113.914
-h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75
-v-11.202c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066c0-5.068-4.107-9.177-9.176-9.177h-0.795
-V196.641c0-43.174,14.942-54.283,30.762-66.043c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
-M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514c0-5.531,1.078-10.957,3.141-16.017
-h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
+h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066
+c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75v-11.202
+c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066
+c0-5.068-4.107-9.177-9.176-9.177h-0.795V196.641c0-43.174,14.942-54.283,30.762-66.043
+c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
+M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514
+c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
               </svg>
             </div>
           </div>
         </div>
-
         <span class="brand-name">Portal VMO</span>
       </div>
     </div>
@@ -272,22 +309,44 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
         <div class="oc-kpi neutral">
           <div class="label">Total</div>
           <div class="value" id="kpiTotal">0</div>
-          <div class="hint">Total de ocorrências</div>
+          <div class="hint" id="kpiTotalHint">Total de ocorrências • 100%</div>
         </div>
+
         <div class="oc-kpi ok">
           <div class="label">Tratadas</div>
           <div class="value" id="kpiTratadas">0</div>
-          <div class="hint">Finalizadas</div>
+          <div class="hint" id="kpiTratadasHint">Finalizadas • 0%</div>
         </div>
+
         <div class="oc-kpi danger">
-          <div class="label">Pendentes</div>
+          <div class="label">Não tratadas</div>
           <div class="value" id="kpiPendentes">0</div>
-          <div class="hint">Em aberto</div>
+          <div class="hint" id="kpiPendentesHint">Em aberto • 0%</div>
+        </div>
+
+        <div class="oc-kpi warn">
+          <div class="label">SLA tempo médio de tratativa</div>
+          <div class="value" id="kpiMediaDias">0</div>
+          <div class="hint">Tempo médio (dias) das tratadas</div>
+        </div>
+      </div>
+
+      <!-- KPIs de Criticidade -->
+      <div class="oc-grid crit" aria-label="Criticidade">
+        <div class="oc-kpi ok">
+          <div class="label">Criticidade: Baixa</div>
+          <div class="value" id="kpiCritBaixa">0%</div>
+          <div class="hint" id="kpiCritBaixaHint">0 ocorrência(s)</div>
         </div>
         <div class="oc-kpi warn">
-          <div class="label">Média (dias)</div>
-          <div class="value" id="kpiMediaDias">0</div>
-          <div class="hint">Tempo médio de tratativa</div>
+          <div class="label">Criticidade: Média</div>
+          <div class="value" id="kpiCritMedia">0%</div>
+          <div class="hint" id="kpiCritMediaHint">0 ocorrência(s)</div>
+        </div>
+        <div class="oc-kpi danger">
+          <div class="label">Criticidade: Alta</div>
+          <div class="value" id="kpiCritAlta">0%</div>
+          <div class="hint" id="kpiCritAltaHint">0 ocorrência(s)</div>
         </div>
       </div>
 
@@ -321,6 +380,26 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
           </select>
         </div>
 
+        <div class="oc-field">
+          <label for="filterCriticidade">Criticidade</label>
+          <select id="filterCriticidade">
+            <option value="">Todas</option>
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+
+        <div class="oc-field">
+          <label for="filterDateStart">Data (De)</label>
+          <input id="filterDateStart" type="date" />
+        </div>
+
+        <div class="oc-field">
+          <label for="filterDateEnd">Data (Até)</label>
+          <input id="filterDateEnd" type="date" />
+        </div>
+
         <div class="oc-actions">
           <button class="oc-btn secondary" id="btnLimpar">Limpar filtros</button>
         </div>
@@ -338,13 +417,14 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
               <th>Fim</th>
               <th>Dias</th>
               <th>Status</th>
+              <th>Criticidade</th>
               <th>Título do e-mail</th>
               <th>Observações</th>
             </tr>
           </thead>
           <tbody id="ocTbody">
             <tr>
-              <td colspan="9" class="oc-empty">Carregando dados…</td>
+              <td colspan="10" class="oc-empty">Carregando dados…</td>
             </tr>
           </tbody>
         </table>
@@ -356,9 +436,9 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
   <!-- JS local (manual) -->
   <script>
     // =========================================================
-    // ✅ DADOS MANUAIS (baseado no seu ocorrencias.xlsx)
+    // ✅ DADOS MANUAIS
     // =========================================================
-    // Colunas: Cliente, Unidade, Ocorrência, Início, Fim, Tratado?, Título, Observações. [1](https://prosegur365-my.sharepoint.com/personal/br05748363_prosegur_com/_layouts/15/Doc.aspx?sourcedoc=%7BEDA5F120-D30A-4F13-880C-6F9556BFDBD2%7D&file=ocorrencias.xlsx&action=default&mobileredirect=true)
+    // + Criticidade (manual via seletor na tabela; persistência via localStorage)
     const ocData = [
       {
         cliente: "Vivo",
@@ -477,11 +557,13 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
     // -----------------------------
     const $ = (id) => document.getElementById(id);
     const tbody = $("ocTbody");
-
     const search = $("search");
     const filterCliente = $("filterCliente");
     const filterUnidade = $("filterUnidade");
     const filterStatus = $("filterStatus");
+    const filterCriticidade = $("filterCriticidade");
+    const filterDateStart = $("filterDateStart");
+    const filterDateEnd = $("filterDateEnd");
 
     function normalize(s){ return (s || "").toString().trim().toLowerCase(); }
 
@@ -490,6 +572,14 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       if (!d) return null;
       const [dd, mm, yyyy] = d.split("/");
       if (!dd || !mm || !yyyy) return null;
+      return new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+    }
+
+    function parseISODate(d){
+      // d: "YYYY-MM-DD" → Date (local)
+      if (!d) return null;
+      const [yyyy, mm, dd] = d.split("-");
+      if (!yyyy || !mm || !dd) return null;
       return new Date(Number(yyyy), Number(mm) - 1, Number(dd));
     }
 
@@ -507,30 +597,110 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       return { text: "Pendente", cls: "danger" };
     }
 
-    function updateKpis(all){
-      const total = all.length;
-      const tratadas = all.filter(r => normalize(r.tratado) === "true").length;
-      const pendentes = all.filter(r => normalize(r.tratado) !== "true").length;
+    function pct(part, total){
+      if (!total) return 0;
+      return Math.round((part / total) * 100);
+    }
 
-      // média de dias apenas das tratadas com fim preenchido
-      const diasList = all
+    // -----------------------------
+    // Criticidade (persistência)
+    // -----------------------------
+    const CRIT_KEY = "portal_vmo_ocorrencias_criticidade_v1";
+
+    function rowKey(row){
+      return encodeURIComponent(
+        `${row.cliente || ""}|${row.unidade || ""}|${row.ocorrencia || ""}|${row.inicio || ""}|${row.fim || ""}`
+      );
+    }
+
+    function loadCritMap(){
+      try{
+        return JSON.parse(localStorage.getItem(CRIT_KEY) || "{}") || {};
+      }catch(e){
+        return {};
+      }
+    }
+
+    function saveCritMap(map){
+      localStorage.setItem(CRIT_KEY, JSON.stringify(map));
+    }
+
+    function getCriticidade(row){
+      const map = loadCritMap();
+      const key = rowKey(row);
+      const stored = map[key];
+      const base = normalize(row.criticidade);
+      // padrão: média se não definido
+      return stored || (base ? base : "media");
+    }
+
+    function setCriticidade(row, value){
+      const map = loadCritMap();
+      map[rowKey(row)] = value;
+      saveCritMap(map);
+    }
+
+    function updateKpis(list){
+      const total = list.length;
+      const tratadas = list.filter(r => normalize(r.tratado) === "true").length;
+      const pendentes = total - tratadas;
+
+      const pTrat = pct(tratadas, total);
+      const pPend = pct(pendentes, total);
+
+      // SLA: média de dias apenas das tratadas com fim preenchido
+      const diasList = list
         .filter(r => normalize(r.tratado) === "true" && r.inicio && r.fim)
         .map(r => diffDays(r.inicio, r.fim))
         .filter(v => v !== "" && !Number.isNaN(v));
 
-      const media = diasList.length ? Math.round(diasList.reduce((a,b) => a + b, 0) / diasList.length) : 0;
+      const media = diasList.length
+        ? Math.round(diasList.reduce((a,b) => a + b, 0) / diasList.length)
+        : 0;
 
       $("kpiTotal").textContent = total;
       $("kpiTratadas").textContent = tratadas;
       $("kpiPendentes").textContent = pendentes;
       $("kpiMediaDias").textContent = media;
+
+      $("kpiTotalHint").textContent = `Total de ocorrências • ${total ? 100 : 0}%`;
+      $("kpiTratadasHint").textContent = `Finalizadas • ${pTrat}%`;
+      $("kpiPendentesHint").textContent = `Em aberto • ${pPend}%`;
+
+      // Criticidade (%)
+      const baixa = list.filter(r => getCriticidade(r) === "baixa").length;
+      const mediaC = list.filter(r => getCriticidade(r) === "media").length;
+      const alta = list.filter(r => getCriticidade(r) === "alta").length;
+
+      $("kpiCritBaixa").textContent = `${pct(baixa, total)}%`;
+      $("kpiCritMedia").textContent = `${pct(mediaC, total)}%`;
+      $("kpiCritAlta").textContent = `${pct(alta, total)}%`;
+
+      $("kpiCritBaixaHint").textContent = `${baixa} ocorrência(s)`;
+      $("kpiCritMediaHint").textContent = `${mediaC} ocorrência(s)`;
+      $("kpiCritAltaHint").textContent = `${alta} ocorrência(s)`;
+    }
+
+    function intervalIntersects(aStart, aEnd, bStart, bEnd){
+      // Intersecção entre [aStart..aEnd] e [bStart..bEnd]
+      // (quando existir apenas um lado, assume o mesmo como início=fim)
+      if (!aStart && !aEnd) return true;
+      if (!bStart && !bEnd) return true;
+
+      const as = aStart || aEnd;
+      const ae = aEnd || aStart;
+      const bs = bStart || bEnd;
+      const be = bEnd || bStart;
+
+      if (!as || !ae || !bs || !be) return true;
+      return as <= be && bs <= ae;
     }
 
     function renderTable(list){
       tbody.innerHTML = "";
 
       if (!list.length){
-        tbody.innerHTML = `<tr><td colspan="9" class="oc-empty">Nenhuma ocorrência encontrada com os filtros atuais.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="oc-empty">Nenhuma ocorrência encontrada com os filtros atuais.</td></tr>`;
         return;
       }
 
@@ -544,6 +714,8 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
         const shortTit = titulo.length > 45 ? titulo.slice(0,45) + "..." : (titulo || "—");
         const shortObs = obs.length > 55 ? obs.slice(0,55) + "..." : (obs || "—");
 
+        const crit = getCriticidade(row);
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.cliente || "—"}</td>
@@ -554,6 +726,13 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
           <td>${dias === "" ? "—" : dias}</td>
           <td><span class="badge ${st.cls}">${st.text}</span></td>
           <td>
+            <select class="crit-select ${crit}" data-crit="1" aria-label="Selecionar criticidade">
+              <option value="baixa" ${crit === "baixa" ? "selected" : ""}>Baixa</option>
+              <option value="media" ${crit === "media" ? "selected" : ""}>Média</option>
+              <option value="alta"  ${crit === "alta"  ? "selected" : ""}>Alta</option>
+            </select>
+          </td>
+          <td>
             <div>${shortTit}</div>
             ${titulo && titulo.length > 45 ? `<span class="oc-more" data-full="${encodeURIComponent(titulo)}">ver mais</span>` : ""}
           </td>
@@ -562,6 +741,21 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
             ${obs && obs.length > 55 ? `<span class="oc-more" data-full="${encodeURIComponent(obs)}">ver mais</span>` : ""}
           </td>
         `;
+
+        // listener do seletor de criticidade (salva + reaplica filtros/KPIs)
+        const select = tr.querySelector('select[data-crit="1"]');
+        select.addEventListener("change", () => {
+          const val = normalize(select.value);
+          setCriticidade(row, val);
+
+          // aplica cor no seletor
+          select.classList.remove("baixa","media","alta");
+          select.classList.add(val);
+
+          // atualiza tela
+          applyFilters();
+        });
+
         tbody.appendChild(tr);
       });
 
@@ -574,11 +768,9 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
     }
 
     function populateFilters(all){
-      // Cliente
       const clientes = [...new Set(all.map(r => r.cliente).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
       const unidades = [...new Set(all.map(r => r.unidade).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
 
-      // limpa (mantendo "Todos")
       filterCliente.innerHTML = `<option value="">Todos</option>`;
       clientes.forEach(c => {
         const opt = document.createElement("option");
@@ -601,11 +793,15 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       const c = normalize(filterCliente.value);
       const u = normalize(filterUnidade.value);
       const st = normalize(filterStatus.value);
+      const cr = normalize(filterCriticidade.value);
+
+      const ds = parseISODate(filterDateStart.value);
+      const de = parseISODate(filterDateEnd.value);
 
       const filtered = ocData.filter(row => {
         const text = normalize(`${row.cliente} ${row.unidade} ${row.ocorrencia} ${row.titulo} ${row.observacoes}`);
-
         if (q && !text.includes(q)) return false;
+
         if (c && normalize(row.cliente) !== c) return false;
         if (u && normalize(row.unidade) !== u) return false;
 
@@ -615,11 +811,23 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
           if (st === "pendente" && tratado) return false;
         }
 
+        if (cr){
+          const rowCrit = getCriticidade(row);
+          if (rowCrit !== cr) return false;
+        }
+
+        // filtro por datas: intersecção do período do registro com o intervalo informado
+        if (ds || de){
+          const ri = parseBRDate(row.inicio);
+          const rf = parseBRDate(row.fim) || ri; // se não tem fim, considera início
+          if (!intervalIntersects(ds, de, ri, rf)) return false;
+        }
+
         return true;
       });
 
       renderTable(filtered);
-      updateKpis(ocData); // KPIs do total carregado
+      updateKpis(filtered);
     }
 
     // Eventos
@@ -628,6 +836,9 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       filterCliente.addEventListener(evt, applyFilters);
       filterUnidade.addEventListener(evt, applyFilters);
       filterStatus.addEventListener(evt, applyFilters);
+      filterCriticidade.addEventListener(evt, applyFilters);
+      filterDateStart.addEventListener(evt, applyFilters);
+      filterDateEnd.addEventListener(evt, applyFilters);
     });
 
     $("btnLimpar").addEventListener("click", () => {
@@ -635,6 +846,9 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       filterCliente.value = "";
       filterUnidade.value = "";
       filterStatus.value = "";
+      filterCriticidade.value = "";
+      filterDateStart.value = "";
+      filterDateEnd.value = "";
       applyFilters();
     });
 
@@ -642,6 +856,5 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
     populateFilters(ocData);
     applyFilters();
   </script>
-
 </body>
 </html>

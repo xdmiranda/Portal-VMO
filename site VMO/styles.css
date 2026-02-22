@@ -4,199 +4,9 @@ body {
   background: #f5f5f5;
   color: #333;
 }
-
-/* Barra superior */
-.topbar {
-  background: #ffffff;
-  border-bottom: 3px solid #f2c94c;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  padding: 15px 0;
-}
-
-.topbar-content {
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-}
-
-.logo { height: 50px; }
-
-.topbar h1 {
-  margin: 0;
-  color: #444;
-}
-
-/* Layout cards */
-.cards-wrapper {
-  display: flex;
-  justify-content: center;
-  padding: 60px 20px;
-}
-
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 280px);
-  gap: 30px;
-  justify-content: center;
-  /* força altura padrão */
-  grid-auto-rows: 160px;
-}
-
-/* Card */
-.card {
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 14px;
-  text-decoration: none;
-  color: #333;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  transition: all 0.3s ease;
-  border-top: 4px solid #f2c94c;
-  position: relative;
-  overflow: hidden;
-
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  /* variável da imagem (será definida nas classes .card-xxx) */
-  --card-bg: none;
-}
-
-/* =========================================================
-   ✅ NOVO COMPORTAMENTO:
-   - IMAGEM aparece no normal (sem texto)
-   - NO HOVER a IMAGEM some e o TEXTO aparece
-   ========================================================= */
-
-/* camada da imagem (animável via opacity) */
-.card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: var(--card-bg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-  opacity: 1;
-  transition: opacity .25s ease, transform .25s ease, filter .25s ease;
-}
-
-/* camada “fundo do texto” (só aparece no hover) */
-.card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.92);
-  z-index: 1;
-  opacity: 0;
-  transition: opacity .25s ease;
-}
-
-/* Texto some por padrão */
-.card h2 {
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  color: #222;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity .25s ease, transform .25s ease;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  line-height: 1.2;
-}
-
-/* Hover: some imagem, aparece fundo e texto */
-.card:hover::after {
-  opacity: 0;
-  transform: scale(1.02);
-  filter: blur(1px);
-}
-
-.card:hover::before {
-  opacity: 1;
-}
-
-.card:hover h2 {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Mantém seu efeito hover de “subir” */
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-}
-
-/* Acessibilidade (teclado): mesma lógica do hover ao focar */
-.card:focus-visible {
-  outline: 3px solid rgba(0,0,0,0.25);
-  outline-offset: 3px;
-}
-.card:focus-visible::after {
-  opacity: 0;
-  transform: scale(1.02);
-  filter: blur(1px);
-}
-.card:focus-visible::before { opacity: 1; }
-.card:focus-visible h2 {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Imagens (agora via variável --card-bg) */
-.card-relatorios { --card-bg: url("img/relatorios.png"); }
-.card-neo { --card-bg: url("img/neo.png"); }
-.card-ecomp { --card-bg: url("img/ecomp.png"); }
-.card-km { --card-bg: url("img/km.png"); }
-.card-orientacoes { --card-bg: url("img/orientacoes.png"); }
-.card-pops { --card-bg: url("img/pops.png"); }
-.card-ocorrencias { --card-bg: url("img/ocorrencias.png"); }
-.card-matriz-mensal { --card-bg: url("img/matriz-mensal.png"); }
-.card-manutencao { --card-bg: url("img/manutencao.png"); }
-
-
-/* páginas internas */
-.content-page {
-  max-width: 900px;
-  margin: 50px auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-
-.back-btn {
-  display: inline-block;
-  margin-bottom: 20px;
-  text-decoration: none;
-  background: #f2c94c;
-  color: #333;
-  padding: 8px 15px;
-  border-radius: 8px;
-  font-weight: 500;
-}
-
-.back-btn:hover { opacity: 0.9; }
-
-/* Responsivo */
-@media (max-width: 900px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 160px;
-  }
-}
-
-/* Barra estilo sistema */
+/* =========================
+ Barra estilo sistema
+========================= */
 .topbar {
   background: #f2c200;
   height: 70px;
@@ -206,13 +16,11 @@ body {
   padding: 0 20px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
-
 .left-section {
   display: flex;
   align-items: center;
   gap: 20px;
 }
-
 .hamburger {
   font-size: 24px;
   cursor: pointer;
@@ -221,56 +29,46 @@ body {
   background: rgba(0,0,0,0.05);
   border-radius: 4px;
 }
-
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
-.logo { height: 40px; }
-
 .brand-name {
   font-size: 20px;
   font-weight: 700;
   color: #222;
 }
-
 .right-section {
   display: flex;
   align-items: center;
   gap: 20px;
 }
-
 .icons span {
   margin-right: 10px;
   cursor: pointer;
   font-size: 18px;
 }
-
 .user-info {
   display: flex;
   flex-direction: column;
   font-size: 12px;
   color: #222;
 }
-
 .region {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 13px;
 }
-
 .divider {
   width: 1px;
   height: 40px;
   background: rgba(0,0,0,0.3);
 }
-
 /* =========================================================
-   Loader (caminhão) no lugar do logo - escopado no header
-   ========================================================= */
+ Loader (caminhão) no lugar do logo - escopado no header
+========================================================= */
 .brand-loader-container{
   width: 62px;
   height: 40px;
@@ -280,7 +78,6 @@ body {
   overflow: hidden;
   pointer-events: none;
 }
-
 .brand-loader-container .loader{
   width: fit-content;
   height: fit-content;
@@ -290,7 +87,6 @@ body {
   transform: scale(0.28);
   transform-origin: left center;
 }
-
 .brand-loader-container .truckWrapper {
   width: 200px;
   height: 100px;
@@ -301,20 +97,17 @@ body {
   justify-content: flex-end;
   overflow-x: hidden;
 }
-
 .brand-loader-container .truckBody {
   width: 130px;
   height: fit-content;
   margin-bottom: 6px;
   animation: brandTruckMotion 1s linear infinite;
 }
-
 @keyframes brandTruckMotion {
   0% { transform: translateY(0px); }
   50% { transform: translateY(3px); }
   100% { transform: translateY(0px); }
 }
-
 .brand-loader-container .truckTires {
   width: 130px;
   height: fit-content;
@@ -325,9 +118,7 @@ body {
   position: absolute;
   bottom: 0;
 }
-
 .brand-loader-container .truckTires svg { width: 24px; }
-
 .brand-loader-container .road {
   width: 100%;
   height: 1.5px;
@@ -337,7 +128,6 @@ body {
   align-self: flex-end;
   border-radius: 3px;
 }
-
 .brand-loader-container .road::before {
   content: "";
   position: absolute;
@@ -349,7 +139,6 @@ body {
   animation: brandRoadAnimation 1.4s linear infinite;
   border-left: 10px solid rgba(255,255,255,0.85);
 }
-
 .brand-loader-container .road::after {
   content: "";
   position: absolute;
@@ -361,7 +150,6 @@ body {
   animation: brandRoadAnimation 1.4s linear infinite;
   border-left: 4px solid rgba(255,255,255,0.85);
 }
-
 .brand-loader-container .lampPost {
   position: absolute;
   bottom: 0;
@@ -369,18 +157,16 @@ body {
   height: 90px;
   animation: brandRoadAnimation 1.4s linear infinite;
 }
-
 @keyframes brandRoadAnimation {
   0% { transform: translateX(0px); }
   100% { transform: translateX(-350px); }
 }
-
 /* ===============================
-   ✅ MENU LATERAL (Hambúrguer)
-   =============================== */
+ MENU LATERAL (Hambúrguer)
+=============================== */
 .nav-overlay{
   position: fixed;
-  top: 70px;                  /* altura da topbar */
+  top: 70px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -390,12 +176,10 @@ body {
   transition: opacity .25s ease, visibility .25s ease;
   z-index: 9998;
 }
-
 .nav-overlay.open{
   opacity: 1;
   visibility: visible;
 }
-
 .nav{
   position: fixed;
   top: 70px;
@@ -407,17 +191,12 @@ body {
   transform: translateX(-110%);
   transition: transform .25s ease;
   z-index: 9999;
-
   display: flex;
   flex-direction: column;
   padding: 14px;
   gap: 8px;
 }
-
-.nav.open{
-  transform: translateX(0);
-}
-
+.nav.open{ transform: translateX(0); }
 .nav a{
   text-decoration: none;
   color: #222;
@@ -427,15 +206,272 @@ body {
   background: rgba(0,0,0,0.03);
   transition: background .2s ease, transform .2s ease;
 }
-
 .nav a:hover{
   background: rgba(0,0,0,0.06);
   transform: translateX(2px);
 }
-
 @media (max-width: 520px){
-  .nav{
-    width: 85vw;
-    max-width: 320px;
-  }
+  .nav{ width: 85vw; max-width: 320px; }
 }
+/* ===============================
+ Layout das seções
+=============================== */
+.cards-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px 60px;
+}
+.cards-sections{
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+.cards-section{ width: 100%; }
+/* Linha com título */
+.section-title{
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #222;
+  letter-spacing: .2px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-title::after{
+  content: "";
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #FFD203, rgba(0,0,0,0.08));
+}
+/* ===============================
+ Cards (portrait + FLIP 3D)
+=============================== */
+:root{
+  --card-w: 280px;
+  --card-h: 340px;
+  --card-radius: 14px;
+  --card-gap: 30px;
+  --visible-count: 3;
+}
+.card{
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--card-radius);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-top: 4px solid #f2c94c;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+  display: block;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  min-width: var(--card-w);
+  perspective: 1100px;
+  --card-bg: none;
+}
+.card-inner{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .65s cubic-bezier(.2,.8,.2,1);
+  border-radius: inherit;
+}
+.card:hover .card-inner,
+.card:focus-visible .card-inner{
+  transform: rotateY(180deg);
+}
+.card-face{
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-front{
+  background-image: var(--card-bg);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+}
+.card-front::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.18) 50%, rgba(0,0,0,0) 75%);
+}
+.card-front h2{
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 0 14px 14px 14px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+}
+.card-back{
+  transform: rotateY(180deg);
+  background-image: var(--card-bg);
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  place-items: center;
+}
+.card-back::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.75));
+}
+.card-back::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  backdrop-filter: blur(2px);
+}
+.card-back-content{
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-align: center;
+}
+.card-back-icon{
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+.card-back-text{
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.20);
+}
+.card:hover{
+  box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+}
+.card:focus-visible{
+  outline: 3px solid rgba(0,0,0,0.28);
+  outline-offset: 4px;
+}
+/* Imagens (via variável --card-bg) */
+.card-relatorios { --card-bg: url("img/relatorios.png"); }
+.card-neo { --card-bg: url("img/neo.png"); }
+.card-ecomp { --card-bg: url("img/ecomp.png"); }
+.card-km { --card-bg: url("img/km.png"); }
+.card-orientacoes { --card-bg: url("img/orientacoes.png"); }
+.card-pops { --card-bg: url("img/pops.png"); }
+.card-ocorrencias { --card-bg: url("img/ocorrencias.png"); }
+.card-matriz-mensal { --card-bg: url("img/matriz-mensal.png"); }
+.card-manutencao { --card-bg: url("img/manutencao.png"); }
+/* ✅ NOVAS IMAGENS (crie os arquivos quando quiser) */
+.card-contatos-vmos { --card-bg: url("img/contatos-vmos.png"); }
+.card-clientes-unidades { --card-bg: url("img/clientes-unidades.png"); }
+.card-pronta-resposta { --card-bg: url("img/pronta-resposta.png"); }
+.card-modelos-solicitacao { --card-bg: url("img/modelos-solicitacao.png"); }
+/* ===============================
+ Carrossel (3 cards visíveis)
+=============================== */
+.carousel{
+  position: relative;
+  width: 100%;
+  padding: 0 62px;
+  box-sizing: border-box;
+}
+.carousel-viewport{
+  overflow: hidden;
+  margin: 0 auto;
+  width: min(
+    100%,
+    calc((var(--card-w) * var(--visible-count)) + (var(--card-gap) * (var(--visible-count) - 1)))
+  );
+}
+.carousel-track{
+  display: flex;
+  gap: var(--card-gap);
+  align-items: stretch;
+  will-change: transform;
+  transition: transform .35s ease;
+  flex-wrap: nowrap;
+}
+.carousel-btn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.95);
+  color: #222;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  transition: transform .15s ease, background .15s ease, opacity .15s ease;
+  z-index: 5;
+}
+.carousel-btn:hover{
+  background: #fff;
+  transform: translateY(-50%) scale(1.05);
+}
+.carousel-btn.prev{ left: 8px; }
+.carousel-btn.next{ right: 8px; }
+/* Responsivo: reduz cards visíveis se faltar espaço */
+@media (max-width: 980px){
+  :root{ --visible-count: 2; }
+}
+@media (max-width: 680px){
+  :root{
+    --visible-count: 1;
+    --card-w: min(86vw, 380px);
+    --card-h: 380px;
+    --card-gap: 18px;
+  }
+  .carousel{ padding: 0 52px; }
+  .carousel-btn{ width: 40px; height: 40px; font-size: 26px; }
+}
+/* páginas internas */
+.content-page {
+  max-width: 900px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  background: #f2c94c;
+  color: #333;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+.back-btn:hover { opacity: 0.9; }
