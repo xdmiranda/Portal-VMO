@@ -18,7 +18,6 @@
       gap: 12px;
       margin-top: 10px;
     }
-
     .mv-kpi {
       background: #fff;
       border-radius: 12px;
@@ -30,19 +29,18 @@
       gap: 6px;
       min-height: 72px;
     }
-
     .mv-kpi .label { font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
     .mv-kpi .value { font-size: 26px; font-weight: 800; color: #222; line-height: 1; }
-    .mv-kpi .hint  { font-size: 12px; color: #777; }
-
-    .mv-kpi.ok      { border-left-color: #2ecc71; }
-    .mv-kpi.warn    { border-left-color: #f39c12; }
-    .mv-kpi.danger  { border-left-color: #e74c3c; }
+    .mv-kpi .hint { font-size: 12px; color: #777; }
+    .mv-kpi.ok { border-left-color: #2ecc71; }
+    .mv-kpi.warn { border-left-color: #f39c12; }
+    .mv-kpi.danger { border-left-color: #e74c3c; }
     .mv-kpi.neutral { border-left-color: #95a5a6; }
 
+    /* Toolbar: Equipe + Data início + Data fim + Criticidade + Tipo + Status + Limpar */
     .mv-toolbar{
       display: grid;
-      grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1fr auto;
       gap: 10px;
       align-items: end;
       margin-top: 6px;
@@ -55,7 +53,6 @@
       font-weight: 700;
       margin-bottom: 6px;
     }
-
     .mv-field input, .mv-field select, .mv-field textarea{
       width: 100%;
       padding: 10px 10px;
@@ -67,7 +64,6 @@
       background: #fff;
       box-sizing: border-box;
     }
-
     .mv-field textarea{
       min-height: 92px;
       resize: vertical;
@@ -81,7 +77,6 @@
       justify-content: flex-end;
       flex-wrap: wrap;
     }
-
     .mv-btn{
       appearance: none;
       border: none;
@@ -96,7 +91,6 @@
       white-space: nowrap;
     }
     .mv-btn:hover{ transform: translateY(-1px); opacity: .95; }
-
     .mv-btn.secondary{
       background: #f3f3f3;
       color: #222;
@@ -119,13 +113,11 @@
       overflow: hidden;
       border: 1px solid #eee;
     }
-
     table.mv-table{
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
-
     .mv-table thead th{
       text-align: left;
       padding: 12px 12px;
@@ -137,33 +129,36 @@
       top: 0;
       z-index: 1;
     }
-
     .mv-table tbody td{
       padding: 12px 12px;
       border-bottom: 1px solid #f0f0f0;
       vertical-align: top;
       color: #333;
     }
-
     .mv-table tbody tr:hover{
       background: rgba(242, 194, 0, 0.08);
     }
 
-    .badge{
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 800;
-      font-size: 12px;
-      border: 1px solid transparent;
-      white-space: nowrap;
-    }
-    .badge.ok{ background: rgba(46, 204, 113, .12); color: #1f7a43; border-color: rgba(46, 204, 113, .25); }
-    .badge.warn{ background: rgba(243, 156, 18, .12); color: #8a5a07; border-color: rgba(243, 156, 18, .25); }
-    .badge.danger{ background: rgba(231, 76, 60, .12); color: #8c2b22; border-color: rgba(231, 76, 60, .25); }
-    .badge.neutral{ background: rgba(149, 165, 166, .14); color: #4b5a5a; border-color: rgba(149, 165, 166, .25); }
+    
+.badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid #e4e4e4;
+  white-space: nowrap;
+  background: #f3f3f3;
+  color: #333;
+}
+.badge.ok, .badge.warn, .badge.danger, .badge.neutral{
+  background: #f3f3f3;
+  color: #333;
+  border-color: #e4e4e4;
+}
+*/
 
     .mv-more{
       display: inline-block;
@@ -181,27 +176,204 @@
       font-size: 13px;
     }
 
+    /* Criticidade (seletor colorido) */
+    .crit-select{
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #e4e4e4;
+      font-weight: 900;
+      outline: none;
+      background: #fff;
+      cursor: pointer;
+      appearance: none;
+    }
+    .crit-select.baixa{
+      background: rgba(46,204,113,.12);
+      border-color: rgba(46,204,113,.25);
+      color: #1f7a43;
+    }
+    .crit-select.media{
+      background: rgba(243,156,18,.14);
+      border-color: rgba(243,156,18,.28);
+      color: #8a5a00;
+    }
+    .crit-select.alta{
+      background: rgba(231,76,60,.12);
+      border-color: rgba(231,76,60,.25);
+      color: #8c2b22;
+    }
+
     @media (max-width: 980px){
       .mv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .mv-toolbar{ grid-template-columns: 1fr 1fr; }
     }
-
     @media (max-width: 560px){
       .mv-grid { grid-template-columns: 1fr; }
       .mv-toolbar{ grid-template-columns: 1fr; }
       .mv-actions{ justify-content: stretch; }
       .mv-btn{ width: 100%; }
     }
-  </style>
+  
+
+/* ===============================
+   Modal / Quadro flutuante (Detalhes)
+================================ */
+.mv-modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 18px;
+}
+.mv-modal-overlay.open{ display: flex; }
+
+.mv-modal{
+  width: min(720px, 100%);
+  max-height: min(78vh, 820px);
+  overflow: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 22px 60px rgba(0,0,0,0.28);
+  border: 1px solid rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.mv-modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.mv-modal-title{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 900;
+  color: #222;
+  letter-spacing: .2px;
+}
+
+.mv-modal-close{
+  appearance: none;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  transition: transform .15s ease, opacity .15s ease;
+}
+.mv-modal-close:hover{ transform: scale(1.03); opacity: .95; }
+
+.mv-modal-body{ padding: 14px 16px 18px; }
+
+.mv-details-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.mv-detail{
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 12px 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+}
+
+.mv-detail-label{
+  font-size: 11px;
+  color: #666;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  margin-bottom: 6px;
+}
+
+.mv-detail-value{
+  font-size: 14px;
+  color: #222;
+  font-weight: 700;
+  line-height: 1.35;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.mv-details-btn{
+  appearance: none;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: #fff;
+  color: #222;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .15s ease, background .15s ease, opacity .15s ease;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+}
+.mv-details-btn:hover{ transform: translateY(-1px); background: #fafafa; opacity: .98; }
+.mv-details-btn:disabled{ opacity: .55; cursor: not-allowed; transform: none; }
+
+
+
+/* Área temporária para geração do PDF (fica fora da tela, mas renderiza) */
+.mv-print-area{
+  position: fixed;
+  left: -3000px; /* fora da tela, mas ainda renderizável */
+  top: 0;
+  width: 1122px; /* ~ A4 landscape em px a 96dpi */
+  background: #fff;
+  color: #222;
+  pointer-events: none;
+}
+.mv-print-area table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.mv-print-area th, .mv-print-area td{
+  border: 1px solid #ddd;
+  padding: 6px;
+  vertical-align: top;
+}
+.mv-print-area th{
+  background: #f3f3f3;
+  font-weight: 900;
+}
+.mv-print-area h2{
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.mv-print-area .meta{
+  font-size: 11px;
+  color: #444;
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+.mv-print-area .meta strong{ font-weight: 900; }
+
+</style>
 </head>
 
 <body>
-
   <!-- Topbar (mesma pegada do seu portal) -->
   <header class="topbar">
     <div class="left-section">
       <div class="hamburger" id="menuToggle" role="button" tabindex="0" aria-controls="navMenu" aria-expanded="false">☰</div>
-
       <div class="brand">
         <!-- Loader no lugar do logo -->
         <div class="brand-loader-container" aria-hidden="true">
@@ -239,16 +411,17 @@
 c-1.65,5.146-2.507,10.54-2.507,16.017c0,28.956,23.558,52.514,52.514,52.514c28.956,0,52.514-23.558,52.514-52.514
 c0-5.478-0.856-10.872-2.506-16.017h9.992c0-9.354-19.352-17.204-45.463-19.366v-8.954h-6.149C200.189,38.779,223.924,16,252.882,16
 c29.952,0,54.32,24.368,54.32,54.32c0,28.774-11.078,37.009-25.105,47.437c-17.444,12.968-37.216,27.667-37.216,78.884v113.914
-h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75
-v-11.202c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066c0-5.068-4.107-9.177-9.176-9.177h-0.795
-V196.641c0-43.174,14.942-54.283,30.762-66.043c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
-M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514c0-5.531,1.078-10.957,3.141-16.017
-h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
+h-0.797c-5.068,0-9.174,4.108-9.174,9.177c0,2.844,1.293,5.383,3.321,7.066
+c-3.432,27.933-26.851,95.744-8.226,115.459v11.202h45.75v-11.202
+c18.625-19.715-4.794-87.527-8.227-115.459c2.029-1.683,3.322-4.223,3.322-7.066
+c0-5.068-4.107-9.177-9.176-9.177h-0.795V196.641c0-43.174,14.942-54.283,30.762-66.043
+c14.793-10.997,31.559-23.461,31.559-60.277C323.202,31.545,291.656,0,252.882,0z
+M232.77,111.694c0,23.442-19.071,42.514-42.514,42.514c-23.442,0-42.514-19.072-42.514-42.514
+c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
               </svg>
             </div>
           </div>
         </div>
-
         <span class="brand-name">Portal VMO</span>
       </div>
     </div>
@@ -292,7 +465,7 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
         </p>
       </div>
 
-      <!-- Resumo (você pode ajustar depois) -->
+      <!-- Resumo -->
       <div class="mv-grid" aria-label="Resumo">
         <div class="mv-kpi neutral">
           <div class="label">Total de registros</div>
@@ -318,22 +491,37 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
 
       <div class="mv-note">
         💡 <strong>Dica:</strong> você pode colar aqui os dados direto do Excel (copiar e colar) que a tabela monta automaticamente.
-        O ideal é colar com colunas nesta ordem: <em>Equipe | Data agendamento | Placa | Tipo | Em operação | Observações | Tratado</em>.
+        O ideal é colar com colunas nesta ordem: <em>Equipe / Data agendamento / Placa / Tipo / Observações / Tratado</em>.
+        <br>
+        <strong>Criticidade</strong> você define aqui no site (na tabela) e ela fica salva no navegador.
       </div>
 
-      <!-- Ferramentas + import -->
+      <!-- Filtros -->
       <div class="mv-toolbar">
         <div class="mv-field">
-          <label for="search">Buscar (equipe, placa, observação)</label>
-          <input id="search" type="text" placeholder="Ex.: TEAH..., Cabreúva, pneu, farol..." />
+          <label for="filterEquipe">Equipe</label>
+          <select id="filterEquipe">
+            <option value="">Todas</option>
+          </select>
         </div>
 
         <div class="mv-field">
-          <label for="filterOperacao">Em operação</label>
-          <select id="filterOperacao">
-            <option value="">Todos</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
+          <label for="filterDateStart">Data início</label>
+          <input id="filterDateStart" type="date" />
+        </div>
+
+        <div class="mv-field">
+          <label for="filterDateEnd">Data fim</label>
+          <input id="filterDateEnd" type="date" />
+        </div>
+
+        <div class="mv-field">
+          <label for="filterCriticidade">Criticidade</label>
+          <select id="filterCriticidade">
+            <option value="">Todas</option>
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
           </select>
         </div>
 
@@ -365,13 +553,14 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       <div class="mv-field">
         <label for="pasteData">Cole aqui os dados (copiado do Excel / CSV)</label>
         <textarea id="pasteData" placeholder="Cole as linhas aqui (com tabulação). Exemplo:
-Equipe    Data agendamento    Placa    Tipo    Em operação    Observações    Tratado
-Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRUE"></textarea>
+Equipe\tData agendamento\tPlaca\tTipo\tObservações\tTratado
+Equipe 01\t01-02-2026 10:00\tTEAH123\tCarro\tTroca de pneu\tTRUE"></textarea>
       </div>
 
       <div class="mv-actions">
         <button class="mv-btn" id="btnCarregar">Carregar dados</button>
         <button class="mv-btn secondary" id="btnExemplo">Carregar exemplo</button>
+ <button class="mv-btn secondary" id="btnBaixarRelatorio">Baixar Relatório</button>
       </div>
 
       <!-- Tabela -->
@@ -383,7 +572,7 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
               <th>Data</th>
               <th>Placa</th>
               <th>Tipo</th>
-              <th>Em operação</th>
+              <th>Criticidade</th>
               <th>Status</th>
               <th>Observações</th>
             </tr>
@@ -401,16 +590,34 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
     </div>
   </main>
 
-  <!-- JS local só desta página: render tabela + filtros + contadores -->
+  
+
+  <!-- Modal (Quadro flutuante) de detalhes -->
+  <div class="mv-modal-overlay" id="mvModalOverlay" aria-hidden="true">
+    <div class="mv-modal" role="dialog" aria-modal="true" aria-labelledby="mvModalTitle">
+      <div class="mv-modal-header">
+        <h3 class="mv-modal-title" id="mvModalTitle">Detalhes da manutenção</h3>
+        <button type="button" class="mv-modal-close" id="mvModalClose" aria-label="Fechar">×</button>
+      </div>
+      <div class="mv-modal-body" id="mvModalBody"></div>
+    </div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- JS local só desta página: render tabela + filtros + contadores + criticidade -->
   <script>
     // Dataset da página (vazio até colar ou carregar exemplo)
     let mvData = [];
+    let mvLastRendered = [];
 
     const el = (id) => document.getElementById(id);
-
     const tbody = el("mvTbody");
-    const search = el("search");
-    const filterOperacao = el("filterOperacao");
+
+    // filtros
+    const filterEquipe = el("filterEquipe");
+    const filterDateStart = el("filterDateStart");
+    const filterDateEnd = el("filterDateEnd");
+    const filterCriticidade = el("filterCriticidade");
     const filterTipo = el("filterTipo");
     const filterStatus = el("filterStatus");
 
@@ -418,23 +625,242 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
       return (s || "").toString().trim().toLowerCase();
     }
 
+    
+
+    // ============================== 
+    // Modal (Detalhes) 
+    // ============================== 
+    let lastFocusedEl = null;
+
+    function escapeHtml(str){
+  return (str || "").toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+function getModalEls(){
+      return {
+        overlay: document.getElementById("mvModalOverlay"),
+        closeBtn: document.getElementById("mvModalClose"),
+        body: document.getElementById("mvModalBody")
+      };
+    }
+
+    function openDetailsModal(row){
+      const { overlay, closeBtn, body } = getModalEls();
+      if (!overlay || !body) return;
+
+      lastFocusedEl = document.activeElement;
+
+      const status = getStatusTag(row);
+      const crit = getCriticidade(row);
+
+      const fields = [
+        { label: "Equipe", value: row.equipe || "—" },
+        { label: "Data", value: row.data || "—" },
+        { label: "Placa", value: row.placa || "—" },
+        { label: "Tipo", value: row.tipo || "—" },
+        { label: "Criticidade", value: (crit === "alta" ? "Alta" : crit === "media" ? "Média" : crit === "baixa" ? "Baixa" : "—") },
+        { label: "Status", value: status.text || "—" },
+        { label: "Tratado", value: (normalize(row.tratado) === "true" ? "TRUE" : (normalize(row.tratado) === "false" ? "FALSE" : "—")) },
+        { label: "Observações", value: (row.observacoes || "—") }
+      ];
+
+      body.innerHTML = `
+        <div class="mv-details-grid">
+          ${fields.map(f => `
+            <div class="mv-detail">
+              <div class="mv-detail-label">${escapeHtml(f.label)}</div>
+              <div class="mv-detail-value">${escapeHtml(f.value)}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeDetailsModal(){
+      const { overlay } = getModalEls();
+      if (!overlay) return;
+
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+
+      if (lastFocusedEl && typeof lastFocusedEl.focus === "function"){
+        lastFocusedEl.focus();
+      }
+    }
+
+    // Delegação de eventos: funciona mesmo após re-render da tabela
+    document.addEventListener("click", (e) => {
+      const detailsBtn = e.target.closest("button.mv-details-btn[data-details='1']");
+      if (detailsBtn){
+        const idx = Number(detailsBtn.getAttribute("data-row"));
+        if (!Number.isNaN(idx) && mvLastRendered && mvLastRendered[idx]){
+          openDetailsModal(mvLastRendered[idx]);
+        }
+        return;
+      }
+
+      if (e.target && e.target.id === "mvModalClose"){
+        closeDetailsModal();
+        return;
+      }
+
+      const overlay = document.getElementById("mvModalOverlay");
+      if (overlay && e.target === overlay){
+        closeDetailsModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const overlay = document.getElementById("mvModalOverlay");
+      if (e.key === "Escape" && overlay && overlay.classList.contains("open")){
+        closeDetailsModal();
+      }
+    });
+// ==============================
+    // Criticidade (persistência)
+    // ==============================
+    const CRIT_KEY = "portal_vmo_manutencao_criticidade_v1";
+
+    function rowKey(row){
+      // chave estável: equipe + data + placa + tipo
+      return encodeURIComponent(`${row.equipe || ""}|${row.data || ""}|${row.placa || ""}|${row.tipo || ""}`);
+    }
+
+    function loadCritMap(){
+      try{
+        return JSON.parse(localStorage.getItem(CRIT_KEY) || "{}") || {};
+      }catch(e){
+        return {};
+      }
+    }
+
+    function saveCritMap(map){
+      localStorage.setItem(CRIT_KEY, JSON.stringify(map));
+    }
+
+    function getCriticidade(row){
+      const map = loadCritMap();
+      const key = rowKey(row);
+      const stored = map[key];
+      const base = normalize(row.criticidade);
+      // padrão: média
+      return stored || (base ? base : "media");
+    }
+
+    function setCriticidade(row, value){
+      const map = loadCritMap();
+      map[rowKey(row)] = value;
+      saveCritMap(map);
+    }
+
+    // ==============================
+    // Data helpers
+    // ==============================
+    // Aceita:
+    // - "DD-MM-AAAA HH:mm"
+    // - "DD/MM/AAAA"
+    // - "AAAA-MM-DD" (date input)
+    function parseAnyDate(value){
+      const s = (value || "").toString().trim();
+      if (!s) return null;
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)){
+        const [y,m,d] = s.split("-").map(Number);
+        return new Date(y, m - 1, d);
+      }
+
+      const parts = s.split(" ");
+      const datePart = parts[0] || "";
+      const timePart = parts[1] || "";
+
+      let dd, mm, yyyy;
+      if (datePart.includes("-")){
+        [dd, mm, yyyy] = datePart.split("-").map(Number);
+      } else if (datePart.includes("/")){
+        [dd, mm, yyyy] = datePart.split("/").map(Number);
+      } else {
+        return null;
+      }
+
+      if (!dd || !mm || !yyyy) return null;
+
+      let hh = 0, min = 0;
+      if (timePart && timePart.includes(":")){
+        const [h, m] = timePart.split(":").map(Number);
+        hh = Number.isFinite(h) ? h : 0;
+        min = Number.isFinite(m) ? m : 0;
+      }
+
+      return new Date(yyyy, mm - 1, dd, hh, min, 0, 0);
+    }
+
+    function inDateRange(rowDate, startISO, endISO){
+      if (!startISO && !endISO) return true;
+      if (!rowDate) return false;
+
+      const start = startISO ? parseAnyDate(startISO) : null;
+      const end = endISO ? parseAnyDate(endISO) : null;
+      if (end) end.setHours(23, 59, 59, 999); // inclusivo
+
+      if (start && rowDate < start) return false;
+      if (end && rowDate > end) return false;
+      return true;
+    }
+
+    // ==============================
+    // Status
+    // ==============================
     function getStatusTag(row){
-      // Regra simples e objetiva:
-      // - Se marcado como pendente => Pendente
-      // - Se Tratado TRUE => Tratado
-      // - Se Tratado FALSE => Não tratado
       const tratado = normalize(row.tratado);
       const pend = normalize(row.status) === "pendente";
-
       if (pend) return { text: "Pendente", cls: "warn" };
       if (tratado === "true") return { text: "Tratado", cls: "ok" };
       if (tratado === "false") return { text: "Não tratado", cls: "danger" };
       return { text: "—", cls: "neutral" };
     }
 
-    function renderTable(list){
-      tbody.innerHTML = "";
+    // ==============================
+    // Popula filtro de equipe
+    // ==============================
+    function populateEquipeFilter(){
+      const current = normalize(filterEquipe.value);
 
+      const equipes = [...new Set(mvData.map(r => (r.equipe || "").toString().trim()).filter(Boolean))]
+        .sort((a,b) => a.localeCompare(b, "pt-BR"));
+
+      filterEquipe.innerHTML = `<option value="">Todas</option>`;
+      equipes.forEach(eq => {
+        const opt = document.createElement("option");
+        opt.value = normalize(eq);
+        opt.textContent = eq;
+        filterEquipe.appendChild(opt);
+      });
+
+      if (current){
+        const stillExists = equipes.some(eq => normalize(eq) === current);
+        filterEquipe.value = stillExists ? current : "";
+      } else {
+        filterEquipe.value = "";
+      }
+    }
+
+    // ==============================
+    // Render
+    // ==============================
+    function renderTable(list){
+      mvLastRendered = list;
+      tbody.innerHTML = "";
       if (!list.length){
         tbody.innerHTML = `
           <tr><td colspan="7" class="mv-empty">Nenhum registro encontrado com os filtros atuais.</td></tr>
@@ -442,13 +868,14 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
         return;
       }
 
-      list.forEach((row) => {
+      list.forEach((row, i) => {
+      const rowIndex = i;
         const status = getStatusTag(row);
         const obs = (row.observacoes || "").toString();
         const short = obs.length > 55 ? obs.slice(0, 55) + "..." : obs;
-
-        const op = normalize(row.operacao) === "sim" ? "Sim" : (normalize(row.operacao) === "nao" ? "Não" : "—");
         const tipo = row.tipo || "—";
+
+        const crit = getCriticidade(row);
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -456,17 +883,32 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
           <td>${row.data || "—"}</td>
           <td><strong>${row.placa || "—"}</strong></td>
           <td>${tipo}</td>
-          <td>${op}</td>
+          <td>
+            <select class="crit-select ${crit}" data-crit="1" aria-label="Selecionar criticidade">
+              <option value="baixa" ${crit === "baixa" ? "selected" : ""}>Baixa</option>
+              <option value="media" ${crit === "media" ? "selected" : ""}>Média</option>
+              <option value="alta" ${crit === "alta" ? "selected" : ""}>Alta</option>
+            </select>
+          </td>
           <td><span class="badge ${status.cls}">${status.text}</span></td>
           <td>
-            <div>${short || "—"}</div>
-            ${obs.length > 55 ? `<span class="mv-more" data-full="${encodeURIComponent(obs)}">ver mais</span>` : ""}
-          </td>
+  <button type="button" class="mv-details-btn" data-details="1" data-row="${rowIndex}">Ver detalhes</button>
+</td>
         `;
+
+        // listener criticidade
+        const select = tr.querySelector('select[data-crit="1"]');
+        select.addEventListener("change", () => {
+          const val = normalize(select.value);
+          setCriticidade(row, val);
+          select.classList.remove("baixa", "media", "alta");
+          select.classList.add(val);
+          applyFilters();
+        });
+
         tbody.appendChild(tr);
       });
 
-      // “ver mais” (detalhe de observações)
       tbody.querySelectorAll(".mv-more").forEach(btn => {
         btn.addEventListener("click", () => {
           const full = decodeURIComponent(btn.getAttribute("data-full"));
@@ -475,44 +917,7 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
       });
     }
 
-    function applyFilters(){
-      const q = normalize(search.value);
-      const op = normalize(filterOperacao.value);
-      const tipo = normalize(filterTipo.value);
-      const st = normalize(filterStatus.value);
-
-      const filtered = mvData.filter(row => {
-        const text = normalize(
-          `${row.equipe} ${row.placa} ${row.observacoes} ${row.tipo} ${row.operacao} ${row.tratado} ${row.status}`
-        );
-
-        if (q && !text.includes(q)) return false;
-
-        if (op){
-          if (normalize(row.operacao) !== op) return false;
-        }
-        if (tipo){
-          if (normalize(row.tipo) !== tipo) return false;
-        }
-
-        if (st){
-          const tratado = normalize(row.tratado);
-          const pendente = normalize(row.status) === "pendente";
-
-          if (st === "pendente" && !pendente) return false;
-          if (st === "tratado" && tratado !== "true") return false;
-          if (st === "nao_tratado" && tratado !== "false") return false;
-        }
-
-        return true;
-      });
-
-      renderTable(filtered);
-      updateKpis(mvData); // KPIs sempre do total carregado
-    }
-
     function updateKpis(all){
-      // Se não tiver dataset carregado, mantém os valores padrão que você me passou.
       if (!all.length) return;
 
       const total = all.length;
@@ -526,11 +931,54 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
       el("kpiPendentes").textContent = pendentes;
     }
 
+    // ==============================
+    // Filtros
+    // ==============================
+    function applyFilters(){
+      const eq = normalize(filterEquipe.value);
+      const ds = filterDateStart.value;
+      const de = filterDateEnd.value;
+      const cr = normalize(filterCriticidade.value);
+      const tipo = normalize(filterTipo.value);
+      const st = normalize(filterStatus.value);
+
+      const filtered = mvData.filter(row => {
+        // Equipe
+        if (eq && normalize(row.equipe) !== eq) return false;
+
+        // Data (intervalo)
+        const rowDate = parseAnyDate(row.data);
+        if (!inDateRange(rowDate, ds, de)) return false;
+
+        // Criticidade
+        if (cr){
+          const rowCrit = getCriticidade(row);
+          if (rowCrit !== cr) return false;
+        }
+
+        // Tipo
+        if (tipo && normalize(row.tipo) !== tipo) return false;
+
+        // Status
+        if (st){
+          const tratado = normalize(row.tratado);
+          const pendente = normalize(row.status) === "pendente";
+          if (st === "pendente" && !pendente) return false;
+          if (st === "tratado" && tratado !== "true") return false;
+          if (st === "nao_tratado" && tratado !== "false") return false;
+        }
+
+        return true;
+      });
+
+      renderTable(filtered);
+      updateKpis(mvData);
+    }
+
+    // ==============================
+    // Import (Excel/CSV)
+    // ==============================
     function parsePasted(text){
-      // Aceita:
-      // - colado do Excel: TAB (\t)
-      // - CSV separado por ; ou ,
-      // Decide pelo separador mais provável olhando a 1ª linha.
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
       if (lines.length < 2) return [];
 
@@ -540,6 +988,7 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
       if (!headerLine.includes("\t") && headerLine.includes(",") && !headerLine.includes(";")) sep = ",";
 
       const headers = headerLine.split(sep).map(h => normalize(h));
+
       const idx = (nameVariants) => {
         for (const v of nameVariants){
           const i = headers.indexOf(normalize(v));
@@ -552,12 +1001,11 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
       const iData = idx(["data","data agendamento","data agendada","data agendamento"]);
       const iPlaca = idx(["placa","placa do veiculo","placa do veículo"]);
       const iTipo = idx(["tipo","tipo veiculo","tipo do veiculo","tipo do veículo"]);
-      const iOperacao = idx(["em operacao","em operação","veiculo em operacao","veículo em operação","operacao"]);
       const iObs = idx(["observacoes","observações","obs"]);
       const iTratado = idx(["tratado","true/false","status tratado"]);
+      const iCrit = idx(["criticidade","crit"]);
 
       const out = [];
-
       for (let r = 1; r < lines.length; r++){
         const cols = lines[r].split(sep).map(c => c.trim());
         if (cols.length < 3) continue;
@@ -567,33 +1015,162 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
           data: iData >= 0 ? cols[iData] : "",
           placa: iPlaca >= 0 ? cols[iPlaca] : "",
           tipo: iTipo >= 0 ? cols[iTipo] : "",
-          operacao: iOperacao >= 0 ? cols[iOperacao] : "",
           observacoes: iObs >= 0 ? cols[iObs] : "",
           tratado: iTratado >= 0 ? cols[iTratado] : "",
-          // campo status (opcional) — se você quiser marcar pendentes
+          criticidade: iCrit >= 0 ? normalize(cols[iCrit]) : "",
           status: ""
         };
+
+        // normaliza criticidade caso venha como "alto/médio/baixo"
+        if (row.criticidade === "alto") row.criticidade = "alta";
+        if (row.criticidade === "médio" || row.criticidade === "medio") row.criticidade = "media";
+        if (row.criticidade === "baixo") row.criticidade = "baixa";
 
         // Heurística: se texto tiver "pend" nas observações, marca como pendente
         if (normalize(row.observacoes).includes("pend")) row.status = "pendente";
 
         out.push(row);
       }
-
       return out;
     }
 
+    
+// ==============================
+// PDF - Baixar Relatório
+// ==============================
+
+function formatNow(){
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
+}
+
+function getFiltroResumo(){
+  const eqTxt = (filterEquipe && filterEquipe.value) ? (filterEquipe.options[filterEquipe.selectedIndex]?.textContent || filterEquipe.value) : 'Todas';
+  const ds = filterDateStart?.value ? filterDateStart.value : '—';
+  const de = filterDateEnd?.value ? filterDateEnd.value : '—';
+  const crTxt = (filterCriticidade && filterCriticidade.value) ? (filterCriticidade.options[filterCriticidade.selectedIndex]?.textContent || filterCriticidade.value) : 'Todas';
+  const tipoTxt = (filterTipo && filterTipo.value) ? (filterTipo.options[filterTipo.selectedIndex]?.textContent || filterTipo.value) : 'Todos';
+  const stTxt = (filterStatus && filterStatus.value) ? (filterStatus.options[filterStatus.selectedIndex]?.textContent || filterStatus.value) : 'Todos';
+  return { eqTxt, ds, de, crTxt, tipoTxt, stTxt };
+}
+
+function gerarPdfRelatorio(){
+  if (typeof html2pdf === 'undefined'){
+    alert('Biblioteca de PDF (html2pdf) não carregou. Verifique sua internet e tente novamente.');
+    return;
+  }
+
+  const rows = Array.isArray(mvLastRendered) ? mvLastRendered : [];
+  if (!rows.length){
+    alert('Sem registros visíveis para gerar o relatório.');
+    return;
+  }
+
+  const { eqTxt, ds, de, crTxt, tipoTxt, stTxt } = getFiltroResumo();
+
+  const wrap = document.createElement('div');
+  wrap.className = 'mv-print-area';
+
+  const title = 'Relatório - Manutenção de viaturas';
+  const meta = `
+    <div class="meta">
+      <div><strong>Gerado em:</strong> ${escapeHtml(new Date().toLocaleString('pt-BR'))}</div>
+      <div><strong>Filtros:</strong> Equipe: ${escapeHtml(eqTxt)} • Data: ${escapeHtml(ds)} até ${escapeHtml(de)} • Criticidade: ${escapeHtml(crTxt)} • Tipo: ${escapeHtml(tipoTxt)} • Status: ${escapeHtml(stTxt)}</div>
+      <div><strong>Total visível:</strong> ${rows.length}</div>
+    </div>
+  `;
+
+  const bodyRows = rows.map(r => {
+    const crit = getCriticidade(r);
+    const critTxt = (crit === 'alta') ? 'Alta' : (crit === 'media' ? 'Média' : (crit === 'baixa' ? 'Baixa' : '—'));
+    const status = getStatusTag(r);
+    const statusTxt = status?.text || '—';
+    const obsFull = (r.observacoes || '—').toString();
+
+    return `
+      <tr>
+        <td>${escapeHtml(r.equipe || '—')}</td>
+        <td>${escapeHtml(r.data || '—')}</td>
+        <td>${escapeHtml(r.placa || '—')}</td>
+        <td>${escapeHtml(r.tipo || '—')}</td>
+        <td>${escapeHtml(critTxt)}</td>
+        <td>${escapeHtml(statusTxt)}</td>
+        <td>${escapeHtml(obsFull)}</td>
+      </tr>
+    `;
+  }).join('');
+
+  wrap.innerHTML = `
+    <h2>${escapeHtml(title)}</h2>
+    ${meta}
+    <table>
+      <thead>
+        <tr>
+          <th>Equipe</th>
+          <th>Data</th>
+          <th>Placa</th>
+          <th>Tipo</th>
+          <th>Criticidade</th>
+          <th>Status</th>
+          <th>Observações</th>
+        </tr>
+      </thead>
+      <tbody>${bodyRows}</tbody>
+    </table>
+  `;
+
+  document.body.appendChild(wrap);
+
+  // força layout antes da captura
+  wrap.getBoundingClientRect();
+
+  const fileName = `relatorio_manutencao_viaturas_${formatNow()}.pdf`;
+
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: fileName,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      scrollY: 0,
+      scrollX: 0,
+      windowWidth: wrap.scrollWidth,
+      windowHeight: wrap.scrollHeight
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  };
+
+  // espera um pouco para garantir renderização completa
+  setTimeout(() => {
+    html2pdf().set(opt).from(wrap).save().then(() => {
+      wrap.remove();
+    }).catch((err) => {
+      wrap.remove();
+      console.error(err);
+      alert('Falha ao gerar o PDF. Abra o console (F12) para ver o erro.');
+    });
+  }, 250);
+}
+
+// ==============================
     // Eventos
-    ["input","change"].forEach(evt => {
-      search.addEventListener(evt, applyFilters);
-      filterOperacao.addEventListener(evt, applyFilters);
+    // ==============================
+    ["input", "change"].forEach(evt => {
+      filterEquipe.addEventListener(evt, applyFilters);
+      filterDateStart.addEventListener(evt, applyFilters);
+      filterDateEnd.addEventListener(evt, applyFilters);
+      filterCriticidade.addEventListener(evt, applyFilters);
       filterTipo.addEventListener(evt, applyFilters);
       filterStatus.addEventListener(evt, applyFilters);
     });
 
     el("btnLimpar").addEventListener("click", () => {
-      search.value = "";
-      filterOperacao.value = "";
+      filterEquipe.value = "";
+      filterDateStart.value = "";
+      filterDateEnd.value = "";
+      filterCriticidade.value = "";
       filterTipo.value = "";
       filterStatus.value = "";
       applyFilters();
@@ -602,433 +1179,67 @@ Equipe 01    01-02-2026 10:00    TEAH123    Carro    Sim    Troca de pneu    TRU
     el("btnCarregar").addEventListener("click", () => {
       const txt = el("pasteData").value.trim();
       const parsed = parsePasted(txt);
-
       if (!parsed.length){
-        alert("Não consegui ler os dados. Cole novamente com cabeçalho + linhas (preferencialmente do Excel).");
+        alert("Não consegui ler os dados. Cole novamente com cabeçalho + linhas (preferencialmente do Excel).\n\nDica: Cole com colunas: Equipe, Data agendamento, Placa, Tipo, Observações, Tratado");
         return;
       }
-
       mvData = parsed;
+      populateEquipeFilter();
       applyFilters();
     });
 
     el("btnExemplo").addEventListener("click", () => {
-  // ✅ Dados manuais (carregados do seu Excel "manutenção viaturas.xlsx")
-  mvData = [
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "01-02-2026 06:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Avaria no parachoque trazeiro",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SPI - GUARAREMA - 01 — VMO - TBG - GUARAREMA",
-      "data": "01-02-2026 06:00",
-      "placa": "TEW2E60",
-      "tipo": "SUV",
-      "operacao": "Sim",
-      "observacoes": "Equipe Diurna: Adomiciano Costa, MT: 5704169 CONDUTOR: 06h as 12h Alvaro Cunha, MT: 5704171 CONDUTOR: 12h às 18h Frota : Wellington Coordenação: Altemar",
-      "tratado": "FALSE",
-      "status": "pendente"
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "01-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SPI - GUARAREMA - 01 — VMO - TBG - GUARAREMA",
-      "data": "01-02-2026 18:00",
-      "placa": "TEW2E60",
-      "tipo": "Pickup",
-      "operacao": "Sim",
-      "observacoes": "Condutor nesta data Diego Peres MT 5704167",
-      "tratado": "FALSE",
-      "status": "pendente"
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE BAIXADA",
-      "data": "01-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/Acarro apitando",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "BA - SALVADOR - BASE — EQUIPE VMO - QUEPAR - BAHIA",
-      "data": "02-02-2026 10:00",
-      "placa": "TDG9F48",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Abertura para início da ronda da QUEPAR",
-      "tratado": "FALSE",
-      "status": "pendente"
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "02-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "02-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Veículo com problema na telemetria",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - SÃO PAULO - BASE — Zona Operativa 4 - Telefônica",
-      "data": "02-02-2026 19:00",
-      "placa": "TEA3H70",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Revisar airbag. Farol alto lado esquerdo não funciona",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "03-02-2026 06:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Avaria no parachoque trazeiro",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "03-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/ carro com telemetria apitando sem parar",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "03-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - SÃO PAULO - BASE — Zona Operativa 4 - Telefônica",
-      "data": "03-02-2026 19:00",
-      "placa": "TEA3H70",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "BA - SALVADOR - BASE — EQUIPE VMO - QUEPAR - BAHIA",
-      "data": "04-02-2026 10:00",
-      "placa": "TDG9F48",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Abertura da agenda para início a Ronda da QUEPAR.",
-      "tratado": "FALSE",
-      "status": "pendente"
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "04-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "04-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Veículo com problema na telemetria",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - SÃO PAULO - BASE — Zona Operativa 4 - Telefônica",
-      "data": "04-02-2026 19:00",
-      "placa": "TEA3H70",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Além do airbag, a luz alta do farol lado direito tbm está com avaria, não funciona",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "05-02-2026 06:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Avaria no parachoque traseiro",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "05-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/Acarro com a telemetria ruim não para de apitar",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "05-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SPI - GUARAREMA - 01 — VMO - TBG - GUARAREMA",
-      "data": "05-02-2026 18:00",
-      "placa": "TEW2E60",
-      "tipo": "Pickup",
-      "operacao": "Sim",
-      "observacoes": "Paralamas traseiro com pequeno arranhão do lado direito próximo ao para-choque. Condutor nesta data Diego Peres MT 5704167",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - SÃO PAULO - BASE — Zona Operativa 4 - Telefônica",
-      "data": "05-02-2026 19:00",
-      "placa": "TEA3H70",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "06-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "06-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Veículo com problema na telemetria com som de alarme que não para",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "07-02-2026 06:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Avaria no parachoque traseiro Lâmpada luz baixa do lado direito queimada",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "07-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "07-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A o carro apitando sem parar Telemetria ruim carro com defeito",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "08-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Veículo com problema na telemetria",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "08-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "09-02-2026 06:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "09-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/Acarro com defeito na telemetria",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "10-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "10-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Veículo com problema na telemetria",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "11-02-2026 06:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "avaria no parachoque trazeiro",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SPI - GUARAREMA - 01 — VMO - TBG - GUARAREMA",
-      "data": "11-02-2026 18:00",
-      "placa": "TEW2E60",
-      "tipo": "Pickup",
-      "operacao": "Sim",
-      "observacoes": "VTR está sem a placa Dianteira",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "11-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A problema na telemetria do carro apitando sem parar",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - SÃO PAULO - BASE — Zona Operativa 4 - Telefônica",
-      "data": "11-02-2026 19:00",
-      "placa": "TEA3H70",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "12-02-2026 18:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "12-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "Veículo com problema na telemetria",
-      "tratado": "TRUE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-      "data": "13-02-2026 06:00",
-      "placa": "TEJ6G14",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A",
-      "tratado": "FALSE",
-      "status": ""
-    },
-    {
-      "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-      "data": "13-02-2026 18:00",
-      "placa": "TEA3H97",
-      "tipo": "Carro",
-      "operacao": "Sim",
-      "observacoes": "N/A carro apitando sem parar",
-      "tratado": "TRUE",
-      "status": ""
-    }
-  ];
+      mvData = [
+        {
+          "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
+          "data": "01-02-2026 06:00",
+          "placa": "TEJ6G14",
+          "tipo": "Carro",
+          "observacoes": "Avaria no parachoque trazeiro",
+          "tratado": "TRUE",
+          "status": "",
+          "criticidade": "media"
+        },
+        {
+          "equipe": "SPI - GUARAREMA - 01 — VMO - TBG - GUARAREMA",
+          "data": "01-02-2026 06:00",
+          "placa": "TEW2E60",
+          "tipo": "SUV",
+          "observacoes": "Equipe Diurna: Adomiciano Costa, MT: 5704169. Condutor: 06h às 12h. Alvaro Cunha, MT: 5704171. Condutor: 12h às 18h.",
+          "tratado": "FALSE",
+          "status": "pendente",
+          "criticidade": "alta"
+        },
+        {
+          "equipe": "BA - SALVADOR - BASE — EQUIPE VMO - QUEPAR - BAHIA",
+          "data": "02-02-2026 10:00",
+          "placa": "TDG9F48",
+          "tipo": "Carro",
+          "observacoes": "Abertura para início da ronda da QUEPAR",
+          "tratado": "FALSE",
+          "status": "pendente",
+          "criticidade": "baixa"
+        },
+
+        {
+          "equipe": "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
+          "data": "13-02-2026 18:00",
+          "placa": "TEA3H97",
+          "tipo": "Carro",
+          "observacoes": "N/A carro apitando  sem parar ",
+          "tratado": "FALSE",
+          "status": "pendente",
+          "criticidade": "baixa"
+        },
+      ];
+      populateEquipeFilter();
       applyFilters();
     });
-  </script>
 
+ el("btnBaixarRelatorio").addEventListener("click", gerarPdfRelatorio);
+
+    // Inicializa
+    applyFilters();
+  </script>
 </body>
 </html>
