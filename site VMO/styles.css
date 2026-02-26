@@ -376,20 +376,61 @@ body {
   outline-offset: 4px;
 }
 /* Imagens (via variável --card-bg) */
-.card-relatorios { --card-bg: url("img/relatorios.png"); }
-.card-neo { --card-bg: url("img/neo.png"); }
-.card-ecomp { --card-bg: url("img/ecomp.png"); }
+.card-relatorios { --card-bg: url("img/relatorios.png");
+border-top: 20px solid #506a82; }
+
+.card-neo { --card-bg: url("img/neo.png"); 
+border-top: 20px solid #506a82;}
+
+.card-ecomp { --card-bg: url("img/ecomp.png"); 
+border-top: 20px solid #506a82;}
+
 .card-km { --card-bg: url("img/km.png"); }
-.card-orientacoes { --card-bg: url("img/orientacoes.png"); }
-.card-pops { --card-bg: url("img/pops.png"); }
-.card-ocorrencias { --card-bg: url("img/ocorrencias.png"); }
-.card-matriz-mensal { --card-bg: url("img/matriz-mensal.png"); }
-.card-manutencao { --card-bg: url("img/manutencao.png"); }
+
+.card-orientacoes { --card-bg: url("img/orientacoes.png");
+border-top: 20px solid #506a82; }
+
+.card-pops { --card-bg: url("img/pops.png");
+border-top: 20px solid #506a82;
+ }
+
+.card-ocorrencias 
+{ --card-bg: url("img/ocorrencias.png"); 
+border-top: 20px solid #f2c94c;
+}
+
+.card-matriz-mensal
+ { --card-bg: url("img/matriz-mensal.png"); 
+ 
+  border-top: 20px solid #f2c94c;
+  }
+.card-manutencao 
+{ --card-bg: url("img/manutencao.png"); 
+  border-top: 20px solid #f2c94c;
+}
+
 /* ✅ NOVAS IMAGENS (crie os arquivos quando quiser) */
-.card-contatos-vmos { --card-bg: url("img/contatos-vmos.png"); }
-.card-clientes-unidades { --card-bg: url("img/clientes-unidades.png"); }
-.card-pronta-resposta { --card-bg: url("img/pronta-resposta.png"); }
-.card-modelos-solicitacao { --card-bg: url("img/modelos-solicitacao.png"); }
+.card-contatos-vmos 
+{
+  --card-bg: url("img/contatos-vmos.png"); 
+  border-top: 20px solid #506a82;
+  }
+
+.card-clientes-unidades 
+{ --card-bg: url("img/clientes-unidades.png"); 
+border-top: 20px solid #506a82;
+}
+
+.card-pronta-resposta 
+{ --card-bg: url("img/pronta-resposta.png"); 
+border-top: 20px solid #506a82;
+}
+
+.card-modelos-solicitacao 
+{ --card-bg: url("img/modelos-solicitacao.png"); 
+border-top: 20px solid #506a82;
+}
+
 /* ===============================
  Carrossel (3 cards visíveis)
 =============================== */
@@ -457,7 +498,7 @@ body {
 }
 /* páginas internas */
 .content-page {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 50px auto;
   background: #fff;
   padding: 30px;

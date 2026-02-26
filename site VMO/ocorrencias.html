@@ -15,7 +15,7 @@
 
     .oc-grid{
       display:grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap:12px;
       margin-top:10px;
     }
@@ -45,9 +45,17 @@
     .oc-kpi .value{ font-size:26px; font-weight:900; color:#222; line-height:1; }
     .oc-kpi .hint{ font-size:12px; color:#777; }
 
+ .oc-section-divider{
+  height: 3px;
+  width: 100%;
+  background: #f2c200;
+  border-radius: 999px;
+  margin: 0 0 12px;
+}
+
     .oc-toolbar{
       display:grid;
-      grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1fr 1fr auto;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr auto;
       gap:10px;
       align-items:end;
       margin-top:6px;
@@ -323,15 +331,11 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
           <div class="value" id="kpiPendentes">0</div>
           <div class="hint" id="kpiPendentesHint">Em aberto • 0%</div>
         </div>
+</div>
 
-        <div class="oc-kpi warn">
-          <div class="label">SLA tempo médio de tratativa</div>
-          <div class="value" id="kpiMediaDias">0</div>
-          <div class="hint">Tempo médio (dias) das tratadas</div>
-        </div>
-      </div>
+  <div class="oc-section-divider" aria-hidden="true"></div>
 
-      <!-- KPIs de Criticidade -->
+  <!-- KPIs de Criticidade -->
       <div class="oc-grid crit" aria-label="Criticidade">
         <div class="oc-kpi ok">
           <div class="label">Criticidade: Baixa</div>
@@ -352,11 +356,6 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
 
       <!-- Filtros -->
       <div class="oc-toolbar">
-        <div class="oc-field">
-          <label for="search">Buscar (cliente, unidade, ocorrência, título, observações)</label>
-          <input id="search" type="text" placeholder="Ex.: Vivo, Cabreúva, portão, dispositivo, ponto..." />
-        </div>
-
         <div class="oc-field">
           <label for="filterCliente">Cliente</label>
           <select id="filterCliente">
@@ -549,7 +548,50 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
         tratado: "FALSE",
         titulo: "",
         observacoes: ""
-      }
+      },
+
+      {
+        cliente: "Vivo",
+        unidade: "Zona Operativa - Interior",
+        ocorrencia: "Liberação de Acesso",
+        inicio: "24/02/2026",
+        fim: "",
+        tratado: "FALSE",
+        titulo: "Liberação de Acesso POPS Mobility - Zona Operativa Interior - Telefônica",
+        observacoes: "Colaborador Eduardo Pereira  RE:5746174"
+      }, 
+      {
+        cliente: "IsaCteep",
+        unidade: "IsaCteep - Cabreúva",
+        ocorrencia: "Manutenção no Dispositivo Celular",
+        inicio: "24/02/2026",
+        fim: "",
+        tratado: "False",
+        titulo: "Solicitação de Manutenção no Dispositivo Celular – ISACTEEP SPI - EQUIPE 4 - CABREUVA",
+        observacoes: "O dispositivo ao entrar no POPS ele fecha automaticamente, sem possibilidade de ação."
+      },
+
+      {
+        cliente: "Vivo",
+        unidade: "Zona Operativa - Interior",
+        ocorrencia: "Liberaão de Acesso",
+        inicio: "24/02/2026",
+        fim: "",
+        tratado: "FALSE",
+        titulo: "Solicitação de liberação de Acesso - POPS Mobility  / VIVO - Zona Operativa Interior - Telefônica / SPI",
+        observacoes: "Vinicius Lima RE: BR05153773 sem acesso à plataforma POPS"
+      }, 
+      {
+        cliente: "Tai Engenharia",
+        unidade: "VMO - Amazonas",
+        ocorrencia: "Liberação de Acesso",
+        inicio: "24/02/2026",
+        fim: "25/02/2026",
+        tratado: "TRUE",
+        titulo: "Solicitação de liberação de Acesso - POPS Mobility – Tai Engenharia - VMO - AMAZONAS",
+        observacoes: "Pablo Leandro Passos Castro. RE: BR05767312 sem acesso à plataforma POPS"
+      }, 
+    
     ];
 
     // -----------------------------
@@ -557,8 +599,7 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
     // -----------------------------
     const $ = (id) => document.getElementById(id);
     const tbody = $("ocTbody");
-    const search = $("search");
-    const filterCliente = $("filterCliente");
+const filterCliente = $("filterCliente");
     const filterUnidade = $("filterUnidade");
     const filterStatus = $("filterStatus");
     const filterCriticidade = $("filterCriticidade");
@@ -647,23 +688,10 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
 
       const pTrat = pct(tratadas, total);
       const pPend = pct(pendentes, total);
-
-      // SLA: média de dias apenas das tratadas com fim preenchido
-      const diasList = list
-        .filter(r => normalize(r.tratado) === "true" && r.inicio && r.fim)
-        .map(r => diffDays(r.inicio, r.fim))
-        .filter(v => v !== "" && !Number.isNaN(v));
-
-      const media = diasList.length
-        ? Math.round(diasList.reduce((a,b) => a + b, 0) / diasList.length)
-        : 0;
-
-      $("kpiTotal").textContent = total;
+$("kpiTotal").textContent = total;
       $("kpiTratadas").textContent = tratadas;
       $("kpiPendentes").textContent = pendentes;
-      $("kpiMediaDias").textContent = media;
-
-      $("kpiTotalHint").textContent = `Total de ocorrências • ${total ? 100 : 0}%`;
+$("kpiTotalHint").textContent = `Total de ocorrências • ${total ? 100 : 0}%`;
       $("kpiTratadasHint").textContent = `Finalizadas • ${pTrat}%`;
       $("kpiPendentesHint").textContent = `Em aberto • ${pPend}%`;
 
@@ -789,8 +817,7 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
     }
 
     function applyFilters(){
-      const q = normalize(search.value);
-      const c = normalize(filterCliente.value);
+const c = normalize(filterCliente.value);
       const u = normalize(filterUnidade.value);
       const st = normalize(filterStatus.value);
       const cr = normalize(filterCriticidade.value);
@@ -799,10 +826,7 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
       const de = parseISODate(filterDateEnd.value);
 
       const filtered = ocData.filter(row => {
-        const text = normalize(`${row.cliente} ${row.unidade} ${row.ocorrencia} ${row.titulo} ${row.observacoes}`);
-        if (q && !text.includes(q)) return false;
-
-        if (c && normalize(row.cliente) !== c) return false;
+if (c && normalize(row.cliente) !== c) return false;
         if (u && normalize(row.unidade) !== u) return false;
 
         if (st){
@@ -832,8 +856,7 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
 
     // Eventos
     ["input","change"].forEach(evt => {
-      search.addEventListener(evt, applyFilters);
-      filterCliente.addEventListener(evt, applyFilters);
+filterCliente.addEventListener(evt, applyFilters);
       filterUnidade.addEventListener(evt, applyFilters);
       filterStatus.addEventListener(evt, applyFilters);
       filterCriticidade.addEventListener(evt, applyFilters);
@@ -842,8 +865,7 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
     });
 
     $("btnLimpar").addEventListener("click", () => {
-      search.value = "";
-      filterCliente.value = "";
+filterCliente.value = "";
       filterUnidade.value = "";
       filterStatus.value = "";
       filterCriticidade.value = "";

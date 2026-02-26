@@ -2,15 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===============================
   // Menu lateral (Hambúrguer)
   // ===============================
-  const menuToggle =
-    document.getElementById("menuToggle") ||
-    document.querySelector(".hamburger");
-  if (!menuToggle) return;
+  const menuToggle = document.getElementById("menuToggle") || document.querySelector(".hamburger");
 
-  let nav = document.getElementById("navMenu") || document.querySelector(".nav");
-  let overlay =
-    document.getElementById("navOverlay") ||
-    document.querySelector(".nav-overlay");
+  // Não travar o restante do portal caso alguma página não tenha menu
+  const nav = document.getElementById("navMenu") || document.querySelector(".nav");
+  let overlay = document.getElementById("navOverlay") || document.querySelector(".nav-overlay");
 
   if (!overlay) {
     overlay = document.createElement("div");
@@ -19,60 +15,43 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(overlay);
   }
 
-  if (!nav) {
-    nav = document.createElement("nav");
-    nav.className = "nav";
-    nav.id = "navMenu";
-    nav.setAttribute("aria-label", "Menu do Portal");
-    document.body.appendChild(nav);
-
-    const items = [
-      { text: "Relatórios Diários", href: "relatorios.html" },
-      { text: "Confirmações Neo Energia", href: "neo.html" },
-      { text: "Confirmações Ecomp", href: "ecomp.html" },
-      { text: "Controle de KM", href: "km.html" },
-      { text: "Orientações da área", href: "orientacoes.html" },
-      { text: "POPS", href: "pops.html" },
-    ];
-    nav.innerHTML = items
-      .map((i) => `${i.href}${i.text}</a>`)
-      .join("");
-  }
-
-  menuToggle.setAttribute("role", "button");
-  menuToggle.setAttribute("tabindex", "0");
-  menuToggle.setAttribute("aria-controls", "navMenu");
-  menuToggle.setAttribute("aria-expanded", "false");
-
-  const openMenu = () => {
-    nav.classList.add("open");
-    overlay.classList.add("open");
-    menuToggle.setAttribute("aria-expanded", "true");
-  };
-
-  const closeMenu = () => {
-    nav.classList.remove("open");
-    overlay.classList.remove("open");
+  if (menuToggle && nav) {
+    menuToggle.setAttribute("role", "button");
+    menuToggle.setAttribute("tabindex", "0");
+    menuToggle.setAttribute("aria-controls", "navMenu");
     menuToggle.setAttribute("aria-expanded", "false");
-  };
 
-  const toggleMenu = () => {
-    nav.classList.contains("open") ? closeMenu() : openMenu();
-  };
+    const openMenu = () => {
+      nav.classList.add("open");
+      overlay.classList.add("open");
+      menuToggle.setAttribute("aria-expanded", "true");
+    };
 
-  menuToggle.addEventListener("click", toggleMenu);
-  menuToggle.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleMenu();
-    }
-  });
+    const closeMenu = () => {
+      nav.classList.remove("open");
+      overlay.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    };
 
-  overlay.addEventListener("click", closeMenu);
-  nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeMenu();
-  });
+    const toggleMenu = () => {
+      nav.classList.contains("open") ? closeMenu() : openMenu();
+    };
+
+    menuToggle.addEventListener("click", toggleMenu);
+    menuToggle.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleMenu();
+      }
+    });
+
+    overlay.addEventListener("click", closeMenu);
+    nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMenu();
+    });
+  }
 
   // ===============================
   // Carrossel (mostra N, avança N, loop infinito com repetição)
@@ -92,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const viewport = root.querySelector(".carousel-viewport");
     const btnPrev = root.querySelector(".carousel-btn.prev");
     const btnNext = root.querySelector(".carousel-btn.next");
+
     if (!track || !viewport || !btnPrev || !btnNext) return;
 
     const originals = Array.from(track.children);
@@ -130,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const normalize = () => {
       if (isSnapping) return;
+
       const min = originalCount;
       const max = originalCount * 2;
 
@@ -137,14 +118,14 @@ document.addEventListener("DOMContentLoaded", () => {
         isSnapping = true;
         index -= originalCount;
         applyTransform(false);
-        track.offsetHeight;
+        track.offsetHeight; // força reflow
         track.style.transition = "transform .35s ease";
         isSnapping = false;
       } else if (index < min) {
         isSnapping = true;
         index += originalCount;
         applyTransform(false);
-        track.offsetHeight;
+        track.offsetHeight; // força reflow
         track.style.transition = "transform .35s ease";
         isSnapping = false;
       }

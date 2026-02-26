@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matriz de controle mensal — Portal VMO</title>
+  <title>Projeção de KM´s</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
 
   <!-- Estilo local (só desta página) -->
   <style>
-    .mx-wrap { display:flex; flex-direction:column; gap:16px; }
+    .mx-wrap { display:flex; flex-direction:column; gap:40px; }
     .mx-subtitle { margin-top:6px; color:#666; }
 
     .mx-grid{
@@ -40,7 +40,7 @@
 
     .mx-toolbar{
       display:grid;
-      grid-template-columns: 1.3fr 1fr 1fr 1fr auto;
+      grid-template-columns: 1fr 1.6fr 1fr 1fr 1fr auto;
       gap:10px;
       align-items:end;
       margin-top:6px;
@@ -190,7 +190,109 @@
       .mx-actions{ justify-content: stretch; }
       .mx-btn{ width:100%; }
     }
-  </style>
+  
+
+  /* ===============================
+     Resumo por Cliente (Cards)
+  =============================== */
+  .mx-client-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .mx-client-header h3{
+    margin:0;
+    font-size:14px;
+    color:#222;
+    letter-spacing:.2px;
+  }
+  .mx-client-sub{
+    margin:4px 0 0;
+    color:#666;
+    font-size:12px;
+    line-height:1.35;
+  }
+  .mx-client-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap:12px;
+  }
+  .mx-client-card{
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.06);
+    border-left:6px solid #f2c200;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-height:92px;
+  }
+  .mx-client-card.ok{ border-left-color:#2ecc71; }
+  .mx-client-card.warn{ border-left-color:#f39c12; }
+  .mx-client-card.danger{ border-left-color:#e74c3c; }
+  .mx-client-card.neutral{ border-left-color:#95a5a6; }
+  .mx-client-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    border-left-color:#eeb60d; 
+  }
+  .mx-client-title .name{
+    font-size:12px;
+    font-weight:900;
+    color:#333;
+    text-transform:uppercase;
+    letter-spacing:.3px;
+  }
+  .mx-client-title .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:12px;
+    border:1px solid transparent;
+    white-space:nowrap;
+    background: rgba(149,165,166,.14);
+    color:#4b5a5a;
+    border-color: rgba(149,165,166,.25);
+  }
+  .mx-client-card.ok .pill{ background: rgba(46,204,113,.12); color:#1f7a43; border-color: rgba(46,204,113,.25); }
+  .mx-client-card.warn .pill{ background: rgba(243,156,18,.12); color:#8a5a07; border-color: rgba(243,156,18,.25); }
+  .mx-client-card.danger .pill{ background: rgba(231,76,60,.12); color:#8c2b22; border-color: rgba(231,76,60,.25); }
+
+  .mx-client-metrics{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:8px 12px;
+  }
+  .mx-metric{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .mx-metric .k{
+    font-size:11px;
+    color:#666;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.25px;
+  }
+  .mx-metric .v{
+    font-size:14px;
+    color:#222;
+    font-weight:900;
+    line-height:1.2;
+  }
+  .mx-metric .v.neg{ color:#8c2b22; }
+  .mx-metric .v.pos{ color:#1f7a43; }
+  .mx-metric .v.loss{ color:#8c2b22; }
+  .mx-metric.full{ grid-column: 1 / -1; }
+
+</style>
 </head>
 
 <body>
@@ -281,16 +383,8 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       <a href="index.html" class="back-btn">← Voltar</a>
 
       <div>
-        <h1 style="margin:0;">Matriz de controle mensal (KM)</h1>
-        <p class="mx-subtitle">
-          Objetivo: identificar rapidamente quem <strong>já excedeu</strong>, quem <strong>vai exceder</strong> e quem está <strong>dentro do esperado</strong>.
-        </p>
-      </div>
-
-      <div class="mx-note">
-        ✅ Os dados são <strong>manuais no código</strong>.  
-        Cada item precisa ter: <em>mês, equipe, kmContratado, kmDisponivelDia, kmPermitidoAteMomento, rodadoAteMomento</em>.  
-        O sistema calcula automaticamente: <strong>desvio</strong>, <strong>projeção</strong> e <strong>status</strong>.
+        <h1 style="margin:0;">Projeção KM´s</h1>
+       
       </div>
 
       <!-- KPIs -->
@@ -303,12 +397,12 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
         <div class="mx-kpi danger">
           <div class="label">Excedeu</div>
           <div class="value" id="kpiExcedeu">0</div>
-          <div class="hint">KM já passou do contratado</div>
+          <div class="hint">Equipes excedentes</div>
         </div>
         <div class="mx-kpi warn">
           <div class="label">Vai exceder</div>
           <div class="value" id="kpiVaiExceder">0</div>
-          <div class="hint">Projeção do mês ultrapassa</div>
+          <div class="hint">Projeção final do mês</div>
         </div>
         <div class="mx-kpi ok">
           <div class="label">Dentro</div>
@@ -320,26 +414,34 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
       <!-- Filtros -->
       <div class="mx-toolbar">
         <div class="mx-field">
-          <label for="search">Buscar (equipe)</label>
-          <input id="search" type="text" placeholder="Ex.: CABREUVA, TELEFÔNICA, QUEPAR..." />
-        </div>
-
+  <label for="filterCliente">Cliente</label>
+  <select id="filterCliente">
+    <option value="">Todos</option>
+  </select>
+</div>
+<div class="mx-field">
+  <label for="filterEquipe">Equipe</label>
+  <select id="filterEquipe">
+    <option value="">Todas</option>
+  </select>
+</div>
         <div class="mx-field">
           <label for="filterMes">Mês</label>
           <select id="filterMes">
-            <option value="2026-01">Janeiro - 2026</option>
-            <option value="2026-02">Fevereiro - 2026</option>
-            <option value="2026-01">Março - 2026</option>
-            <option value="2026-01">Abril - 2026</option>
-            <option value="2026-01">Maio - 2026</option>
-            <option value="2026-01">Junho - 2026</option>
-            <option value="2026-01">Julho - 2026</option>
-            <option value="2026-01">Agosto - 2026</option>
-            <option value="2026-01">Setembro - 2026</option>
-            <option value="2026-01">Outubro - 2026</option>
-            <option value="2026-01">Novembro - 2026</option>
-            <option value="2026-01">Dezembro - 2026</option>
-          </select>
+
+      <option value="2026-01">Janeiro - 2026</option>
+      <option value="2026-02">Fevereiro - 2026</option>
+      <option value="2026-03">Março - 2026</option>
+      <option value="2026-04">Abril - 2026</option>
+      <option value="2026-05">Maio - 2026</option>
+      <option value="2026-06">Junho - 2026</option>
+      <option value="2026-07">Julho - 2026</option>
+      <option value="2026-08">Agosto - 2026</option>
+      <option value="2026-09">Setembro - 2026</option>
+      <option value="2026-10">Outubro - 2026</option>
+      <option value="2026-11">Novembro - 2026</option>
+      <option value="2026-12">Dezembro - 2026</option>
+    </select>
         </div>
 
         <div class="mx-field">
@@ -364,43 +466,40 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
 
         <div class="mx-actions">
           <button class="mx-btn secondary" id="btnLimpar">Limpar</button>
+        <button class="mx-btn secondary" id="btnBaixarRelatorio">Baixar Relatório</button>
         </div>
       </div>
 
-      <!-- Painéis objetivos -->
-      <div class="mx-panels">
-        <div class="mx-panel">
-          <h3>⚠️ Top riscos (projeção)</h3>
-          <ul class="mx-list" id="topRiscos">
-            <li>—</li>
-          </ul>
-        </div>
-        <div class="mx-panel">
-          <h3>✅ Dentro do esperado</h3>
-          <ul class="mx-list" id="topDentro">
-            <li>—</li>
-          </ul>
-        </div>
-      </div>
+      <!-- Resumo por cliente (substitui os painéis) -->
+<div class="mx-client-wrap" aria-label="Resumo por cliente">
+  <div class="mx-client-header">
+    <h3>📌 Resumo por cliente</h3>
+    <p class="mx-client-sub">Os valores abaixo respeitam os filtros aplicados (mês, cliente, equipe, status e ordenação).</p>
+  </div>
+  <div class="mx-client-grid" id="mxClienteCards">
+    <div class="mx-empty">Carregando…</div>
+  </div>
+</div>
 
-      <!-- Tabela -->
+<!-- Tabela -->
       <div class="mx-table-wrap" role="region" aria-label="Tabela de matriz mensal">
         <table class="mx-table">
           <thead>
-            <tr>
-              <th>Equipe</th>
-              <th>KM contratado</th>
-              <th>KM/dia (contrato)</th>
-              <th>Permitido até o momento</th>
-              <th>Rodado até o momento</th>
-              <th>Desvio (rodado - permitido)</th>
-              <th>Projeção fim do mês</th>
-              <th>Saldo (contratado - projeção)</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Equipe</th>
+          <th>KM contratado</th>
+          <th>KM/dia (contrato)</th>
+          <th>Permitido até o momento</th>
+          <th>Rodado até o momento</th>
+          <th>Desvio (rodado - permitido)</th>
+          <th>Projeção fim do mês</th>
+          <th>Saldo (contratado - projeção)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
           <tbody id="mxTbody">
-            <tr><td colspan="9" class="mx-empty">Carregando…</td></tr>
+            <tr><td colspan="10" class="mx-empty">Carregando…</td></tr>
           </tbody>
         </table>
       </div>
@@ -408,18 +507,17 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
     </div>
   </main>
 
-  <script>
+  
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script>window.jsPDF = window.jspdf && window.jspdf.jsPDF ? window.jspdf.jsPDF : undefined;</script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.7/dist/jspdf.plugin.autotable.min.js"></script>
+<script>
     // =========================================================
-    // ✅ DADOS MANUAIS (VOCÊ VAI PREENCHER AQUI)
-    // =========================================================
-    // Formato:
-    // { mes:"2026-02", equipe:"...", kmContratado:3200, kmDisponivelDia:114, kmPermitidoAteMomento:892, rodadoAteMomento:2308 }
-    //
-    // 👉 Cole Janeiro e Fevereiro aqui (pode ter várias linhas por mês).
-    //
-    const matrixData = [
+// ✅ DADOS MANUAIS
+// =========================================================
+const matrixData = [
    // ========= JANEIRO/2026 =========
-    { mes: "2026-01", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 25.81, kmPermitidoAteMomento: 800, rodadoAteMomento: 567 },
+    { mes: "2026-01", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 29, kmPermitidoAteMomento: 411, rodadoAteMomento: 389 },
     { mes: "2026-01", equipe: "ISACTEEP SPC - EQUIPE INTERLAGOS", kmContratado: 500, kmDisponivelDia: 16.13, kmPermitidoAteMomento: 500, rodadoAteMomento: 371 },
     { mes: "2026-01", equipe: "ISACTEEP SPC - EQUIPE JANDIRA", kmContratado: 1150, kmDisponivelDia: 37.1, kmPermitidoAteMomento: 1150, rodadoAteMomento: 1834 },
     { mes: "2026-01", equipe: "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO", kmContratado: 3700, kmDisponivelDia: 119.35, kmPermitidoAteMomento: 3700, rodadoAteMomento: 919 },
@@ -441,191 +539,700 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
     { mes: "2026-01", equipe: "GLP - RJ", kmContratado: 1500, kmDisponivelDia: 48.39, kmPermitidoAteMomento: 1500, rodadoAteMomento: 6493 },
 
     // ========= FEVEREIRO/2026 =========
-    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 29, kmPermitidoAteMomento: 580, rodadoAteMomento: 248 },
-    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE INTERLAGOS", kmContratado: 500, kmDisponivelDia: 18, kmPermitidoAteMomento: 360, rodadoAteMomento: 187 },
-    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE JANDIRA", kmContratado: 1150, kmDisponivelDia: 41, kmPermitidoAteMomento: 820, rodadoAteMomento: 324 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO", kmContratado: 3700, kmDisponivelDia: 132, kmPermitidoAteMomento: 2640, rodadoAteMomento: 4 },
+    
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 29, kmPermitidoAteMomento: 580, rodadoAteMomento: 389 },
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE INTERLAGOS", kmContratado: 500, kmDisponivelDia: 18, kmPermitidoAteMomento: 360, rodadoAteMomento: 252 },
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE JANDIRA", kmContratado: 1150, kmDisponivelDia: 41, kmPermitidoAteMomento: 820, rodadoAteMomento: 357 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO", kmContratado: 3700, kmDisponivelDia: 132, kmPermitidoAteMomento: 2640, rodadoAteMomento: 250 },
     { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 2 - SAO JOAO DA B.V", kmContratado: 3200, kmDisponivelDia: 114, kmPermitidoAteMomento: 2280, rodadoAteMomento: 2308 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 3 - BRAGANÇA PAULISTA", kmContratado: 520, kmDisponivelDia: 19, kmPermitidoAteMomento: 380, rodadoAteMomento: 1754 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 4 - CABREUVA", kmContratado: 1925, kmDisponivelDia: 69, kmPermitidoAteMomento: 1380, rodadoAteMomento: 1562 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE BAIXADA", kmContratado: 300, kmDisponivelDia: 11, kmPermitidoAteMomento: 220, rodadoAteMomento: 211 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE LORENA", kmContratado: 1400, kmDisponivelDia: 50, kmPermitidoAteMomento: 1000, rodadoAteMomento: 87 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE - SUMARÉ", kmContratado: 2725, kmDisponivelDia: 97, kmPermitidoAteMomento: 1940, rodadoAteMomento: 1515 },
-    { mes: "2026-02", equipe: "Zona Operativa 1 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2499 },
-    { mes: "2026-02", equipe: "Zona Operativa 2 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 1214 },
-    { mes: "2026-02", equipe: "Zona Operativa 3 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2039 },
-    { mes: "2026-02", equipe: "Zona Operativa 4 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 1688 },
-    { mes: "2026-02", equipe: "Zona Operativa Interior - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 3171 },
-    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - ALAGOAS", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 1472 },
-    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - Bahia", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 511 },
-    { mes: "2026-02", equipe: "VMO - AMAZONAS", kmContratado: 434, kmDisponivelDia: 16, kmPermitidoAteMomento: 320, rodadoAteMomento: 615 },
-    { mes: "2026-02", equipe: "VMO - TBG - GUARAREMA", kmContratado: 11000, kmDisponivelDia: 393, kmPermitidoAteMomento: 7860, rodadoAteMomento: 5572 },
-    { mes: "2026-02", equipe: "GLP - RJ", kmContratado: 1500, kmDisponivelDia: 54, kmPermitidoAteMomento: 1080, rodadoAteMomento: 3933 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 3 - BRAGANÇA PAULISTA", kmContratado: 520, kmDisponivelDia: 19, kmPermitidoAteMomento: 380, rodadoAteMomento: 2428 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 4 - CABREUVA", kmContratado: 1925, kmDisponivelDia: 69, kmPermitidoAteMomento: 1380, rodadoAteMomento: 2025 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE BAIXADA", kmContratado: 300, kmDisponivelDia: 11, kmPermitidoAteMomento: 220, rodadoAteMomento: 263 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE LORENA", kmContratado: 1400, kmDisponivelDia: 50, kmPermitidoAteMomento: 1000, rodadoAteMomento: 111 },
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE - SUMARÉ", kmContratado: 2725, kmDisponivelDia: 97, kmPermitidoAteMomento: 1940, rodadoAteMomento: 2078 },
+
+    { mes: "2026-02", equipe: "Zona Operativa 1 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 3334 },
+    { mes: "2026-02", equipe: "Zona Operativa 2 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 1690 },
+    { mes: "2026-02", equipe: "Zona Operativa 3 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2701 },
+    { mes: "2026-02", equipe: "Zona Operativa 4 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2240 },
+    { mes: "2026-02", equipe: "Zona Operativa Interior - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 4751 },
+
+    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - ALAGOAS", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 1973 },
+    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - Bahia", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 556 },
+    { mes: "2026-02", equipe: "VMO - AMAZONAS", kmContratado: 434, kmDisponivelDia: 16, kmPermitidoAteMomento: 320, rodadoAteMomento: 789 },
+    { mes: "2026-02", equipe: "VMO - TBG - GUARAREMA", kmContratado: 11000, kmDisponivelDia: 393, kmPermitidoAteMomento: 7860, rodadoAteMomento: 8564 },
+    { mes: "2026-02", equipe: "GLP - RJ", kmContratado: 1500, kmDisponivelDia: 54, kmPermitidoAteMomento: 1080, rodadoAteMomento: 5310 },
     ];
 
-    // =======================
-    // Lógica / Interação
-    // =======================
-    const $ = (id) => document.getElementById(id);
+// =========================================================
+// Lógica / Interação
+// =========================================================
+let mxLastRendered = [];
 
-    const tbody = $("mxTbody");
-    const search = $("search");
-    const filterMes = $("filterMes");
-    const filterStatus = $("filterStatus");
-    const sortBy = $("sortBy");
+const $ = (id) => document.getElementById(id);
+const tbody = $("mxTbody");
+const filterMes = $("filterMes");
+const filterStatus = $("filterStatus");
+const sortBy = $("sortBy");
+const filterCliente = $("filterCliente");
+const filterEquipe = $("filterEquipe");
+const clienteCards = $("mxClienteCards");
 
-    function normalize(s){ return (s || "").toString().trim().toLowerCase(); }
+function normalize(s){ return (s || "").toString().trim().toLowerCase(); }
 
-    function daysInMonth(yyyy, mm){
-      return new Date(yyyy, mm, 0).getDate(); // mm: 1..12
+function getSelectedText(sel){
+  if (!sel) return "—";
+  const opt = (sel.options && sel.selectedIndex >= 0) ? sel.options[sel.selectedIndex] : null;
+  return opt ? (opt.textContent || opt.innerText || sel.value || "—") : (sel.value || "—");
+}
+
+function setDefaultMes(){
+  try{
+    const meses = Array.from(new Set(matrixData.map(r => String(r.mes || "").trim()).filter(Boolean))).sort();
+    if (meses.length) filterMes.value = meses[meses.length - 1];
+  }catch(e){}
+}
+
+// =======================
+// Cliente (inferência)
+// =======================
+function inferCliente(equipe){
+  const e = (equipe || "").toString();
+  const up = e.toUpperCase();
+
+  if (up.includes("ZONA OPERATIVA") || up.includes("TELEF")) return "VIVO";
+  if (up.includes("ISACTEEP") || up.includes("ISA CTEEP") || (up.includes("ISA") && up.includes("CTEEP"))) return "IsaCteep";
+  if (up.includes("GLP") && up.includes("RJ")) return "GLP";
+  if (up.includes("QUEPAR")) return "Quepar";
+  if (up.includes("VMO") && up.includes("AMAZONAS")) return "Tai Engenharia";
+  if (up.includes("TBG") && up.includes("GUARAREMA")) return "Ecomp TBG";
+
+  return "—";
+}
+
+function getCliente(row){
+  return (row && row.cliente) ? row.cliente : inferCliente(row ? row.equipe : "");
+}
+
+// =======================
+// Cálculos por equipe
+// =======================
+function daysInMonth(yyyy, mm){
+  return new Date(yyyy, mm, 0).getDate();
+}
+
+function inferDaysPassed(row){
+  // ✅ Regra nova (mês atual): usa o dia real do mês (ex.: hoje = 26)
+  // Assim a projeção vira: (rodado até agora / diaAtual) * totalDiasDoMês
+  try{
+    const parts = (row.mes || "").split("-");
+    const yyyy = Number(parts[0]);
+    const mm = Number(parts[1]); // 1..12
+    const hoje = new Date();
+    const mesAtual = (hoje.getFullYear() === yyyy) && ((hoje.getMonth() + 1) === mm);
+    if (mesAtual){
+      return Math.max(1, hoje.getDate());
+    }
+  }catch(e){ /* ignore */ }
+
+  // 🔁 Fallback (mês não atual): mantém a lógica anterior baseada no permitido
+  if (!row.kmDisponivelDia || !row.kmPermitidoAteMomento) return 0;
+  const d = row.kmPermitidoAteMomento / row.kmDisponivelDia;
+  return Math.max(1, Math.round(d));
+}
+function calcRow(row){
+  const parts = (row.mes || "").split("-");
+  const yyyy = parts[0];
+  const mmStr = parts[1];
+  const mm = Number(mmStr);
+
+  const totalDays = daysInMonth(Number(yyyy), mm);
+  const daysPassed = inferDaysPassed(row);
+
+  const permitido = Number(row.kmPermitidoAteMomento || 0);
+  const rodado = Number(row.rodadoAteMomento || 0);
+  const contratado = Number(row.kmContratado || 0);
+
+  const desvio = rodado - permitido;
+  const avgDia = daysPassed ? (rodado / daysPassed) : 0;
+  const projFim = Math.round(avgDia * totalDays);
+  const saldo = contratado - projFim;
+
+  let status = "dentro";
+  if (rodado > contratado) status = "excedeu";
+  else if (projFim > contratado) status = "vai_exceder";
+
+  const risco = -saldo;
+  return { ...row, cliente: getCliente(row), totalDays, daysPassed, desvio, avgDia, projFim, saldo, status, risco };
+}
+
+function badgeFor(status){
+  if (status === "excedeu") return { text:"Excedeu", cls:"danger" };
+  if (status === "vai_exceder") return { text:"Vai exceder", cls:"warn" };
+  return { text:"Dentro", cls:"ok" };
+}
+
+function updateKpis(list){
+  const total = list.length;
+  const excedeu = list.filter(r => r.status === "excedeu").length;
+  const vai = list.filter(r => r.status === "vai_exceder").length;
+  const dentro = list.filter(r => r.status === "dentro").length;
+
+  $("kpiTotal").textContent = total;
+  $("kpiExcedeu").textContent = excedeu;
+  $("kpiVaiExceder").textContent = vai;
+  $("kpiDentro").textContent = dentro;
+}
+
+// =======================
+// Resumo por Cliente (Cards)
+// =======================
+function fmtKm(n){
+  const num = Number(n || 0);
+  return num.toLocaleString('pt-BR');
+}
+
+function fmtMoney(n){
+  const num = Number(n || 0);
+  return num.toLocaleString('pt-BR');
+}
+function clsSaldo(n){
+  return Number(n) < 0 ? 'neg' : 'pos';
+}
+
+function cardClass(contratado, saldoProj){
+  const c = Number(contratado || 0);
+  const s = Number(saldoProj || 0);
+  if (c <= 0) return 'neutral';
+  if (s < 0) return 'danger';
+  if (s <= c * 0.05) return 'warn';
+  return 'ok';
+}
+
+function renderClienteCards(list){
+  if (!clienteCards) return;
+
+  if (!list.length){
+    clienteCards.innerHTML = '<div class="mx-empty">Sem dados para os filtros atuais.</div>';
+    return;
+  }
+
+  // Totais (respeitando filtros)
+  const totalContr = list.reduce((a,r) => a + Number(r.kmContratado || 0), 0);
+  const totalRod = list.reduce((a,r) => a + Number(r.rodadoAteMomento || 0), 0);
+  const totalProj = list.reduce((a,r) => a + Number(r.projFim || 0), 0);
+  const saldoAtual = totalContr - totalRod;
+  const saldoProj = totalContr - totalProj;
+
+  // Prejuízo (R$1 por KM excedido) — SOMENTE quando rodado já passou do contratado
+  const totalExcedenteKm = list.reduce((acc, r) => {
+    const rod = Number(r.rodadoAteMomento || 0);
+    const ctr = Number(r.kmContratado || 0);
+    return acc + Math.max(0, rod - ctr);
+  }, 0);
+  const totalPrejuizo = totalExcedenteKm; // R$ 1 por km
+
+  // Agrupa por cliente (e já acumula excedente por cliente)
+  const map = new Map();
+  list.forEach(r => {
+    const cli = (r.cliente || getCliente(r) || '—').toString();
+    if (!map.has(cli)) map.set(cli, { cliente: cli, contratado: 0, rodado: 0, proj: 0, excedente: 0 });
+    const it = map.get(cli);
+
+    it.contratado += Number(r.kmContratado || 0);
+    it.rodado += Number(r.rodadoAteMomento || 0);
+    it.proj += Number(r.projFim || 0);
+
+    const rod = Number(r.rodadoAteMomento || 0);
+    const ctr = Number(r.kmContratado || 0);
+    it.excedente += Math.max(0, rod - ctr);
+  });
+
+  const clientes = Array.from(map.values())
+    .map(it => ({
+      ...it,
+      saldoAtual: it.contratado - it.rodado,
+      saldoProj: it.contratado - it.proj,
+      prejuizo: (it.excedente || 0) // R$ 1 por km
+    }))
+    .sort((a,b) => a.cliente.localeCompare(b.cliente, 'pt-BR'));
+
+  const cards = [];
+
+  // TOTAL
+  const clsTotal = cardClass(totalContr, saldoProj);
+  cards.push(`
+    <div class="mx-client-card ${clsTotal}">
+      <div class="mx-client-title">
+        <div class="name">TOTAL (FILTROS)</div>
+        <span class="pill">${saldoProj < 0 ? 'Pagando p/ trabalhar' : 'Positivo'}</span>
+      </div>
+      <div class="mx-client-metrics">
+        <div class="mx-metric"><div class="k">Contratado</div><div class="v">${fmtKm(totalContr)} km</div></div>
+        <div class="mx-metric"><div class="k">Realizado</div><div class="v">${fmtKm(totalRod)} km</div></div>
+        <div class="mx-metric"><div class="k">Saldo atual</div><div class="v ${clsSaldo(saldoAtual)}">${fmtKm(saldoAtual)} km</div></div>
+        <div class="mx-metric"><div class="k">Saldo proj.</div><div class="v ${clsSaldo(saldoProj)}">${fmtKm(saldoProj)} km</div></div>
+        <div class="mx-metric full"><div class="k">Prejuízo estimado (R$)</div><div class="v ${totalPrejuizo > 0 ? 'loss' : 'pos'}">R$ ${fmtMoney(totalPrejuizo)}${totalPrejuizo > 0 ? `` : ''}</div></div>
+      </div>
+    </div>
+  `);
+
+  // Por cliente
+  clientes.forEach(it => {
+    const cls = cardClass(it.contratado, it.saldoProj);
+    cards.push(`
+      <div class="mx-client-card ${cls}">
+        <div class="mx-client-title">
+          <div class="name">${it.cliente}</div>
+          <span class="pill">${it.saldoProj < 0 ? 'Pagando p/ trabalhar' : 'Positivo'}</span>
+        </div>
+        <div class="mx-client-metrics">
+          <div class="mx-metric"><div class="k">Contratado</div><div class="v">${fmtKm(it.contratado)} km</div></div>
+          <div class="mx-metric"><div class="k">Realizado</div><div class="v">${fmtKm(it.rodado)} km</div></div>
+          <div class="mx-metric"><div class="k">Saldo atual</div><div class="v ${clsSaldo(it.saldoAtual)}">${fmtKm(it.saldoAtual)} km</div></div>
+          <div class="mx-metric"><div class="k">Saldo proj.</div><div class="v ${clsSaldo(it.saldoProj)}">${fmtKm(it.saldoProj)} km</div></div>
+          <div class="mx-metric full"><div class="k">Prejuízo (R$)</div><div class="v ${it.prejuizo > 0 ? 'loss' : 'pos'}">R$ ${fmtMoney(it.prejuizo)}${it.prejuizo > 0 ? `` : ''}</div></div>
+        </div>
+      </div>
+    `);
+  });
+
+  clienteCards.innerHTML = cards.join('');
+}
+
+// =======================
+// Render da tabela
+// =======================
+function renderTable(list){
+  tbody.innerHTML = "";
+  if (!list.length){
+    tbody.innerHTML = `<tr><td colspan="10" class="mx-empty">Sem dados para este mês (ou filtros atuais).</td></tr>`;
+    return;
+  }
+
+  list.forEach(r => {
+    const b = badgeFor(r.status);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${r.cliente || '—'}</strong></td>
+      <td><strong>${r.equipe}</strong></td>
+      <td>${r.kmContratado}</td>
+      <td>${r.kmDisponivelDia}</td>
+      <td>${r.kmPermitidoAteMomento}</td>
+      <td>${r.rodadoAteMomento}</td>
+      <td>${r.desvio}</td>
+      <td>${r.projFim}</td>
+      <td>${r.saldo}</td>
+      <td><span class="badge ${b.cls}">${b.text}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+
+function populateClienteFilter(rows){
+  if (!filterCliente) return;
+  const current = normalize(filterCliente.value);
+  const clientes = Array.from(new Set(rows.map(r => (r.cliente || '').toString().trim()).filter(Boolean)))
+    .sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+  filterCliente.innerHTML = '<option value="">Todos</option>';
+  clientes.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = normalize(c);
+    opt.textContent = c;
+    filterCliente.appendChild(opt);
+  });
+
+  if (current && clientes.some(c => normalize(c) === current)) filterCliente.value = current;
+  else filterCliente.value = '';
+}
+
+function populateEquipeFilter(rows, cli){
+  if (!filterEquipe) return;
+  const current = normalize(filterEquipe.value);
+
+  const scoped = cli ? rows.filter(r => normalize(r.cliente) === cli) : rows;
+  const equipes = Array.from(new Set(scoped.map(r => (r.equipe || '').toString().trim()).filter(Boolean)))
+    .sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+  filterEquipe.innerHTML = '<option value="">Todas</option>';
+  equipes.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = normalize(e);
+    opt.textContent = e;
+    filterEquipe.appendChild(opt);
+  });
+
+  if (current && equipes.some(e => normalize(e) === current)) filterEquipe.value = current;
+  else filterEquipe.value = '';
+}
+
+function applyFilters(){
+  const mes = filterMes.value;
+  const st = filterStatus.value;
+  const sort = sortBy.value;
+
+  const cli = normalize(filterCliente.value);
+  const eq = normalize(filterEquipe.value);
+
+  const monthRows = matrixData
+    .filter(r => r.mes === mes)
+    .map(calcRow);
+
+  // Atualiza opções dos filtros (dinâmico por mês e por cliente)
+  populateClienteFilter(monthRows);
+  populateEquipeFilter(monthRows, cli);
+
+  const base = monthRows.filter(r => {
+    if (cli && normalize(r.cliente) !== cli) return false;
+    if (eq && normalize(r.equipe) !== eq) return false;
+    if (st && r.status !== st) return false;
+    return true;
+  });
+
+  base.sort((a,b) => {
+    if (sort === "risco_desc") return b.risco - a.risco;
+    if (sort === "desvio_desc") return b.desvio - a.desvio;
+    if (sort === "rodado_desc") return b.rodadoAteMomento - a.rodadoAteMomento;
+    if (sort === "equipe_asc") return a.equipe.localeCompare(b.equipe, "pt-BR");
+    return 0;
+  });
+
+  mxLastRendered = base;
+  updateKpis(base);
+  renderClienteCards(base);
+  renderTable(base);
+}
+
+// ============================== 
+
+// ============================== 
+// PDF - Baixar Relatório (jsPDF + AutoTable) 
+// Inclui: KPIs + Resumo por cliente (cards) + tabela
+// ============================== 
+function formatNow(){
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
+}
+
+function getKpisFromTela(){
+  const num = (id) => {
+    const elx = document.getElementById(id);
+    const v = elx ? (elx.textContent || '').trim() : '0';
+    const n = parseInt(v, 10);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return {
+    total: num('kpiTotal'),
+    excedeu: num('kpiExcedeu'),
+    vai: num('kpiVaiExceder'),
+    dentro: num('kpiDentro')
+  };
+}
+
+function drawKpiCards(doc, x0, y0){
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const gap = 6;
+  const cardW = (pageWidth - x0*2 - gap*3) / 4;
+  const cardH = 22;
+
+  const k = getKpisFromTela();
+  const cards = [
+    { label: 'TOTAL DE EQUIPES', value: String(k.total), hint: 'No mês selecionado', bar: [149, 165, 166] },
+    { label: 'EXCEDEU', value: String(k.excedeu), hint: 'Equipes excedentes', bar: [231, 76, 60] },
+    { label: 'VAI EXCEDER', value: String(k.vai), hint: 'Projeção final do mês', bar: [243, 156, 18] },
+    { label: 'DENTRO', value: String(k.dentro), hint: 'Dentro do esperado', bar: [46, 204, 113] }
+  ];
+
+  for (let i = 0; i < cards.length; i++){
+    const c = cards[i];
+    const x = x0 + i * (cardW + gap);
+
+    doc.setDrawColor(230);
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(x, y0, cardW, cardH, 3, 3, 'FD');
+
+    doc.setFillColor(c.bar[0], c.bar[1], c.bar[2]);
+    doc.roundedRect(x, y0, 2.6, cardH, 2, 2, 'F');
+
+    doc.setTextColor(90);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.text(c.label, x + 6, y0 + 7);
+
+    doc.setTextColor(20);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text(c.value, x + 6, y0 + 15);
+
+    doc.setTextColor(120);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.text(c.hint, x + 6, y0 + 20);
+  }
+
+  return y0 + cardH;
+}
+
+function buildClienteResumo(rows){
+  const map = new Map();
+  rows.forEach(r => {
+    const cli = (r.cliente || '—').toString();
+    if (!map.has(cli)) map.set(cli, { cliente: cli, contratado: 0, rodado: 0, proj: 0 });
+    const it = map.get(cli);
+    it.contratado += Number(r.kmContratado || 0);
+    it.rodado += Number(r.rodadoAteMomento || 0);
+    it.proj += Number(r.projFim || 0);
+  });
+
+  const list = Array.from(map.values()).map(it => ({
+    ...it,
+    saldoAtual: it.contratado - it.rodado,
+    saldoProj: it.contratado - it.proj
+  })).sort((a,b) => a.cliente.localeCompare(b.cliente, 'pt-BR'));
+
+  const totalContr = rows.reduce((a,r) => a + Number(r.kmContratado || 0), 0);
+  const totalRod = rows.reduce((a,r) => a + Number(r.rodadoAteMomento || 0), 0);
+  const totalProj = rows.reduce((a,r) => a + Number(r.projFim || 0), 0);
+
+  const totalObj = {
+    cliente: 'TOTAL (FILTROS)',
+    contratado: totalContr,
+    rodado: totalRod,
+    proj: totalProj,
+    saldoAtual: totalContr - totalRod,
+    saldoProj: totalContr - totalProj,
+    isTotal: true
+  };
+
+  return [totalObj, ...list];
+}
+
+function fmtKmPdf(n){
+  const v = Number(n || 0);
+  return v.toLocaleString('pt-BR');
+}
+
+function saldoLabel(saldoProj){
+  return Number(saldoProj) < 0 ? 'Pagando p/ trabalhar' : 'Positivo';
+}
+
+function clientCardStyle(item){
+  if (Number(item.saldoProj) < 0) return { bar: [231, 76, 60] };
+  const c = Number(item.contratado || 0);
+  if (c > 0 && Number(item.saldoProj) <= c * 0.05) return { bar: [243, 156, 18] };
+  return { bar: [46, 204, 113] };
+}
+
+function drawClienteCards(doc, items, x0, y0){
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const cols = 3;
+  const gap = 6;
+  const cardW = (pageW - x0*2 - gap*(cols-1)) / cols;
+  const cardH = 30;
+
+  let x = x0;
+  let y = y0;
+  let col = 0;
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(20);
+  doc.text('Resumo por cliente', x0, y0 - 3);
+  y += 2;
+
+  for (let i = 0; i < items.length; i++){
+    const it = items[i];
+
+    if (y + cardH > pageH - 14){
+      doc.addPage();
+      x = x0;
+      y = 18;
+      col = 0;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(20);
+      doc.text('Resumo por cliente (cont.)', x0, y - 3);
+      y += 2;
     }
 
-    function inferDaysPassed(row){
-      // inferindo pelos dados que já têm "permitido até o momento"
-      // diasPassados ≈ permitido / kmDia
-      if (!row.kmDisponivelDia || !row.kmPermitidoAteMomento) return 0;
-      const d = row.kmPermitidoAteMomento / row.kmDisponivelDia;
-      return Math.max(1, Math.round(d));
+    const st = clientCardStyle(it);
+
+    doc.setDrawColor(230);
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(x, y, cardW, cardH, 3, 3, 'FD');
+
+    doc.setFillColor(st.bar[0], st.bar[1], st.bar[2]);
+    doc.roundedRect(x, y, 2.6, cardH, 2, 2, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(60);
+    doc.text((it.cliente || '—').toString().toUpperCase(), x + 6, y + 7);
+
+    const pill = saldoLabel(it.saldoProj);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(st.bar[0], st.bar[1], st.bar[2]);
+    doc.text(pill, x + cardW - 6 - doc.getTextWidth(pill), y + 7);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(90);
+    doc.text('CONTRATADO', x + 6, y + 14);
+    doc.text('REALIZADO', x + cardW/2 + 2, y + 14);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(20);
+    doc.text(fmtKmPdf(it.contratado) + ' km', x + 6, y + 19);
+    doc.text(fmtKmPdf(it.rodado) + ' km', x + cardW/2 + 2, y + 19);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(90);
+    doc.text('SALDO ATUAL', x + 6, y + 25);
+    doc.text('SALDO PROJ.', x + cardW/2 + 2, y + 25);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    const corSaldoA = Number(it.saldoAtual) < 0 ? [231,76,60] : [46,204,113];
+    const corSaldoP = Number(it.saldoProj) < 0 ? [231,76,60] : [46,204,113];
+    doc.setTextColor(corSaldoA[0], corSaldoA[1], corSaldoA[2]);
+    doc.text(fmtKmPdf(it.saldoAtual) + ' km', x + 6, y + 29);
+    doc.setTextColor(corSaldoP[0], corSaldoP[1], corSaldoP[2]);
+    doc.text(fmtKmPdf(it.saldoProj) + ' km', x + cardW/2 + 2, y + 29);
+
+    col += 1;
+    if (col >= cols){
+      col = 0;
+      x = x0;
+      y += cardH + gap;
+    }else{
+      x += cardW + gap;
     }
+  }
 
-    function calcRow(row){
-      const [yyyy, mmStr] = row.mes.split("-");
-      const mm = Number(mmStr); // 1..12
-      const totalDays = daysInMonth(Number(yyyy), mm);
-      const daysPassed = inferDaysPassed(row);
+  return y + (col === 0 ? 0 : cardH + gap);
+}
 
-      const permitido = Number(row.kmPermitidoAteMomento || 0);
-      const rodado = Number(row.rodadoAteMomento || 0);
-      const contratado = Number(row.kmContratado || 0);
+function gerarPdfRelatorio(){
+  if (!window.jsPDF){
+    alert('Biblioteca jsPDF não carregou. Verifique sua conexão e tente novamente.');
+    return;
+  }
 
-      const desvio = rodado - permitido; // >0: acima do permitido até o momento
-      const avgDia = daysPassed ? (rodado / daysPassed) : 0;
-      const projFim = Math.round(avgDia * totalDays);
+  const rows = Array.isArray(mxLastRendered) ? mxLastRendered : [];
+  if (!rows.length){
+    alert('Sem registros para gerar o relatório. Ajuste os filtros e tente novamente.');
+    return;
+  }
 
-      const saldo = contratado - projFim;
+  const doc = new window.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  if (typeof doc.autoTable !== 'function'){
+    alert('Plugin AutoTable não carregou. Verifique sua conexão e tente novamente.');
+    return;
+  }
 
-      let status = "dentro";
-      if (rodado > contratado) status = "excedeu";
-      else if (projFim > contratado) status = "vai_exceder";
+  const mesTxt = getSelectedText(filterMes);
+  const statusTxt = filterStatus.value ? getSelectedText(filterStatus) : 'Todos';
+  const ordenacaoTxt = getSelectedText(sortBy);
+const titulo = 'Relatório - Matriz de controle mensal (KM)';
+  const geradoEm = new Date().toLocaleString('pt-BR');
 
-      // risco: quanto mais negativo o saldo, maior risco.
-      const risco = -saldo;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(20);
+  doc.text(titulo, 14, 14);
 
-      return { ...row, totalDays, daysPassed, desvio, avgDia, projFim, saldo, status, risco };
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(60);
+  doc.text(`Gerado em: ${geradoEm}`, 14, 20);
+  const clienteTxt = filterCliente.value ? getSelectedText(filterCliente) : "Todos";
+  const equipeTxt = filterEquipe.value ? getSelectedText(filterEquipe) : "Todas";
+  doc.text(`Filtros: Mês: ${mesTxt} • Cliente: ${clienteTxt} • Equipe: ${equipeTxt} • Status: ${statusTxt} • Ordenação: ${ordenacaoTxt}`, 14, 26);
+
+  let y = drawKpiCards(doc, 14, 30) + 6;
+
+  const resumoClientes = buildClienteResumo(rows);
+  y = drawClienteCards(doc, resumoClientes, 14, y + 6);
+
+  const head = [[ 'Cliente','Equipe','KM contratado','KM/dia','Permitido','Rodado','Desvio','Projeção','Saldo','Status' ]];
+  const body = rows.map(r => {
+    const b = badgeFor(r.status);
+    return [
+      (r.cliente || '—').toString(),
+      (r.equipe || '—').toString(),
+      String(r.kmContratado ?? '—'),
+      String(r.kmDisponivelDia ?? '—'),
+      String(r.kmPermitidoAteMomento ?? '—'),
+      String(r.rodadoAteMomento ?? '—'),
+      String(r.desvio ?? '—'),
+      String(r.projFim ?? '—'),
+      String(r.saldo ?? '—'),
+      (b.text || '—').toString()
+    ];
+  });
+
+  doc.autoTable({
+    head,
+    body,
+    startY: y,
+    styles: { font: 'helvetica', fontSize: 8, cellPadding: 2, valign: 'top' },
+    headStyles: { fillColor: [243, 243, 243], textColor: [34, 34, 34], fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 22 },
+      1: { cellWidth: 58 },
+      2: { cellWidth: 20 },
+      3: { cellWidth: 18 },
+      4: { cellWidth: 24 },
+      5: { cellWidth: 22 },
+      6: { cellWidth: 18 },
+      7: { cellWidth: 24 },
+      8: { cellWidth: 18 },
+      9: { cellWidth: 18 }
+    },
+    didDrawPage: function(){
+      const pageCount = doc.getNumberOfPages();
+      const pageInfo = doc.internal.getCurrentPageInfo();
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      doc.setFontSize(9);
+      doc.setTextColor(120);
+      doc.text(`Página ${pageInfo.pageNumber} de ${pageCount}`, pageW - 34, pageH - 8);
     }
+  });
 
-    function badgeFor(status){
-      if (status === "excedeu") return { text:"Excedeu", cls:"danger" };
-      if (status === "vai_exceder") return { text:"Vai exceder", cls:"warn" };
-      return { text:"Dentro", cls:"ok" };
-    }
+  doc.save(`relatorio_matriz_km_${formatNow()}.pdf`);
+}
 
-    function updateKpis(list){
-      const total = list.length;
-      const excedeu = list.filter(r => r.status === "excedeu").length;
-      const vai = list.filter(r => r.status === "vai_exceder").length;
-      const dentro = list.filter(r => r.status === "dentro").length;
 
-      $("kpiTotal").textContent = total;
-      $("kpiExcedeu").textContent = excedeu;
-      $("kpiVaiExceder").textContent = vai;
-      $("kpiDentro").textContent = dentro;
-    }
 
-    function renderPanels(list){
-      const riscos = list
-        .filter(r => r.status !== "dentro")
-        .sort((a,b) => b.risco - a.risco)
-        .slice(0, 5);
+// Eventos
+["input","change"].forEach(evt => {
+filterMes.addEventListener(evt, applyFilters);
+  filterCliente.addEventListener(evt, applyFilters);
+  filterEquipe.addEventListener(evt, applyFilters);
+  filterStatus.addEventListener(evt, applyFilters);
+  sortBy.addEventListener(evt, applyFilters);
+});
 
-      const dentro = list
-        .filter(r => r.status === "dentro")
-        .sort((a,b) => b.saldo - a.saldo)
-        .slice(0, 5);
+$("btnLimpar").addEventListener("click", () => {
+filterStatus.value = "";
+  sortBy.value = "risco_desc";
+  applyFilters();
+});
 
-      const ulR = $("topRiscos");
-      const ulD = $("topDentro");
+$("btnBaixarRelatorio").addEventListener("click", gerarPdfRelatorio);
 
-      ulR.innerHTML = riscos.length
-        ? riscos.map(r => `<li><strong>${r.equipe}</strong> — projeção ${r.projFim} km | saldo ${r.saldo} km</li>`).join("")
-        : "<li>—</li>";
+// Inicializa
+setDefaultMes();
+applyFilters();
 
-      ulD.innerHTML = dentro.length
-        ? dentro.map(r => `<li><strong>${r.equipe}</strong> — projeção ${r.projFim} km | sobra ${r.saldo} km</li>`).join("")
-        : "<li>—</li>";
-    }
-
-    function renderTable(list){
-      tbody.innerHTML = "";
-      if (!list.length){
-        tbody.innerHTML = `<tr><td colspan="9" class="mx-empty">Sem dados para este mês (ou filtros atuais).</td></tr>`;
-        return;
-      }
-
-      list.forEach(r => {
-        const b = badgeFor(r.status);
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><strong>${r.equipe}</strong></td>
-          <td>${r.kmContratado}</td>
-          <td>${r.kmDisponivelDia}</td>
-          <td>${r.kmPermitidoAteMomento}</td>
-          <td>${r.rodadoAteMomento}</td>
-          <td>${r.desvio}</td>
-          <td>${r.projFim}</td>
-          <td>${r.saldo}</td>
-          <td><span class="badge ${b.cls}">${b.text}</span></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function applyFilters(){
-      const q = normalize(search.value);
-      const mes = filterMes.value;
-      const st = filterStatus.value;
-      const sort = sortBy.value;
-
-      const base = matrixData
-        .filter(r => r.mes === mes)
-        .map(calcRow)
-        .filter(r => {
-          if (q && !normalize(r.equipe).includes(q)) return false;
-          if (st && r.status !== st) return false;
-          return true;
-        });
-
-      // ordenação
-      base.sort((a,b) => {
-        if (sort === "risco_desc") return b.risco - a.risco;
-        if (sort === "desvio_desc") return b.desvio - a.desvio;
-        if (sort === "rodado_desc") return b.rodadoAteMomento - a.rodadoAteMomento;
-        if (sort === "equipe_asc") return a.equipe.localeCompare(b.equipe, "pt-BR");
-        return 0;
-      });
-
-      updateKpis(base);
-      renderPanels(base);
-      renderTable(base);
-    }
-
-    // Eventos
-    ["input","change"].forEach(evt => {
-      search.addEventListener(evt, applyFilters);
-      filterMes.addEventListener(evt, applyFilters);
-      filterStatus.addEventListener(evt, applyFilters);
-      sortBy.addEventListener(evt, applyFilters);
-    });
-
-    $("btnLimpar").addEventListener("click", () => {
-      search.value = "";
-      filterStatus.value = "";
-      sortBy.value = "risco_desc";
-      applyFilters();
-    });
-
-    // Inicializa
-    applyFilters();
   </script>
 
 </body>

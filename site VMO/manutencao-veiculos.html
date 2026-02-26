@@ -40,7 +40,7 @@
     /* Toolbar: Equipe + Data início + Data fim + Criticidade + Tipo + Status + Limpar */
     .mv-toolbar{
       display: grid;
-      grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1fr auto;
+      grid-template-columns: 1fr 1.6fr 1fr 1fr 1fr 1fr 1fr auto;
       gap: 10px;
       align-items: end;
       margin-top: 6px;
@@ -158,8 +158,6 @@
   color: #333;
   border-color: #e4e4e4;
 }
-*/
-
     .mv-more{
       display: inline-block;
       font-weight: 800;
@@ -330,42 +328,6 @@
 
 
 
-/* Área temporária para geração do PDF (fica fora da tela, mas renderiza) */
-.mv-print-area{
-  position: fixed;
-  left: -3000px; /* fora da tela, mas ainda renderizável */
-  top: 0;
-  width: 1122px; /* ~ A4 landscape em px a 96dpi */
-  background: #fff;
-  color: #222;
-  pointer-events: none;
-}
-.mv-print-area table{
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11px;
-}
-.mv-print-area th, .mv-print-area td{
-  border: 1px solid #ddd;
-  padding: 6px;
-  vertical-align: top;
-}
-.mv-print-area th{
-  background: #f3f3f3;
-  font-weight: 900;
-}
-.mv-print-area h2{
-  margin: 0 0 6px;
-  font-size: 16px;
-}
-.mv-print-area .meta{
-  font-size: 11px;
-  color: #444;
-  margin-bottom: 10px;
-  line-height: 1.35;
-}
-.mv-print-area .meta strong{ font-weight: 900; }
-
 </style>
 </head>
 
@@ -488,16 +450,15 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
           <div class="hint">Em andamento / aguardando</div>
         </div>
       </div>
-
-      <div class="mv-note">
-        💡 <strong>Dica:</strong> você pode colar aqui os dados direto do Excel (copiar e colar) que a tabela monta automaticamente.
-        O ideal é colar com colunas nesta ordem: <em>Equipe / Data agendamento / Placa / Tipo / Observações / Tratado</em>.
-        <br>
-        <strong>Criticidade</strong> você define aqui no site (na tabela) e ela fica salva no navegador.
-      </div>
-
-      <!-- Filtros -->
+<!-- Filtros -->
       <div class="mv-toolbar">
+        <div class="mv-field">
+          <label for="filterCliente">Cliente</label>
+          <select id="filterCliente">
+          <option value="">Todos</option>
+        </select>
+        </div>
+
         <div class="mv-field">
           <label for="filterEquipe">Equipe</label>
           <select id="filterEquipe">
@@ -549,17 +510,8 @@ c0-5.531,1.078-10.957,3.141-16.017h78.747C231.693,100.736,232.77,106.162,232.77,
           <button class="mv-btn secondary" id="btnLimpar">Limpar filtros</button>
         </div>
       </div>
-
-      <div class="mv-field">
-        <label for="pasteData">Cole aqui os dados (copiado do Excel / CSV)</label>
-        <textarea id="pasteData" placeholder="Cole as linhas aqui (com tabulação). Exemplo:
-Equipe\tData agendamento\tPlaca\tTipo\tObservações\tTratado
-Equipe 01\t01-02-2026 10:00\tTEAH123\tCarro\tTroca de pneu\tTRUE"></textarea>
-      </div>
-
-      <div class="mv-actions">
-        <button class="mv-btn" id="btnCarregar">Carregar dados</button>
-        <button class="mv-btn secondary" id="btnExemplo">Carregar exemplo</button>
+<div class="mv-actions">
+<button class="mv-btn secondary" id="btnExemplo">Carregar exemplo</button>
  <button class="mv-btn secondary" id="btnBaixarRelatorio">Baixar Relatório</button>
       </div>
 
@@ -568,6 +520,7 @@ Equipe 01\t01-02-2026 10:00\tTEAH123\tCarro\tTroca de pneu\tTRUE"></textarea>
         <table class="mv-table">
           <thead>
             <tr>
+              <th>Cliente</th>
               <th>Equipe</th>
               <th>Data</th>
               <th>Placa</th>
@@ -579,8 +532,8 @@ Equipe 01\t01-02-2026 10:00\tTEAH123\tCarro\tTroca de pneu\tTRUE"></textarea>
           </thead>
           <tbody id="mvTbody">
             <tr>
-              <td colspan="7" class="mv-empty">
-                Nenhum registro carregado ainda. Cole os dados acima e clique <strong>Carregar dados</strong>.
+              <td colspan="8" class="mv-empty">
+                Nenhum registro carregado ainda. Clique <strong>Carregar exemplo</strong> para visualizar dados.
               </td>
             </tr>
           </tbody>
@@ -602,644 +555,727 @@ Equipe 01\t01-02-2026 10:00\tTEAH123\tCarro\tTroca de pneu\tTRUE"></textarea>
       <div class="mv-modal-body" id="mvModalBody"></div>
     </div>
   </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script>window.jsPDF = window.jspdf && window.jspdf.jsPDF ? window.jspdf.jsPDF : undefined;</script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.7/dist/jspdf.plugin.autotable.min.js"></script>
 <!-- JS local só desta página: render tabela + filtros + contadores + criticidade -->
   <script>
-    // Dataset da página (vazio até colar ou carregar exemplo)
-    let mvData = [];
-    let mvLastRendered = [];
+// Dataset da página
+let mvData = [];
+let mvLastRendered = [];
 
-    const el = (id) => document.getElementById(id);
-    const tbody = el("mvTbody");
+const el = (id) => document.getElementById(id);
+const tbody = el('mvTbody');
 
-    // filtros
-    const filterEquipe = el("filterEquipe");
-    const filterDateStart = el("filterDateStart");
-    const filterDateEnd = el("filterDateEnd");
-    const filterCriticidade = el("filterCriticidade");
-    const filterTipo = el("filterTipo");
-    const filterStatus = el("filterStatus");
+// filtros
+const filterCliente = el('filterCliente');
+const filterEquipe = el('filterEquipe');
+const filterDateStart = el('filterDateStart');
+const filterDateEnd = el('filterDateEnd');
+const filterCriticidade = el('filterCriticidade');
+const filterTipo = el('filterTipo');
+const filterStatus = el('filterStatus');
 
-    function normalize(s){
-      return (s || "").toString().trim().toLowerCase();
-    }
-
-    
-
-    // ============================== 
-    // Modal (Detalhes) 
-    // ============================== 
-    let lastFocusedEl = null;
-
-    function escapeHtml(str){
-  return (str || "").toString()
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+function normalize(s){
+  return (s || '').toString().trim().toLowerCase();
 }
+
+function escapeHtml(str){
+  return (str || '').toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// ============================== 
+// Cliente (fallback)
+// ============================== 
+function inferClienteFromEquipe(equipe){
+  const e = (equipe || '').toString().toUpperCase();
+  if (e.includes('ISACTEEP')) return 'ISACTEEP';
+  if (e.includes('TBG')) return 'TBG';
+  if (e.includes('QUEPAR')) return 'QUEPAR';
+  if (e.includes('TELEF')) return 'VIVO';
+  if (e.includes('GLP')) return 'GLP';
+  if (e.includes('TAI')) return 'TAI ENGENHARIA';
+  return '';
+}
+
+function getCliente(row){
+  return (row && row.cliente) ? row.cliente : inferClienteFromEquipe(row?.equipe);
+}
+
+// ============================== 
+// Modal (Detalhes)
+// ============================== 
+let lastFocusedEl = null;
+
 function getModalEls(){
-      return {
-        overlay: document.getElementById("mvModalOverlay"),
-        closeBtn: document.getElementById("mvModalClose"),
-        body: document.getElementById("mvModalBody")
-      };
-    }
+  return {
+    overlay: el('mvModalOverlay'),
+    closeBtn: el('mvModalClose'),
+    body: el('mvModalBody')
+  };
+}
 
-    function openDetailsModal(row){
-      const { overlay, closeBtn, body } = getModalEls();
-      if (!overlay || !body) return;
+function openDetailsModal(row){
+  const { overlay, closeBtn, body } = getModalEls();
+  if (!overlay || !body) return;
 
-      lastFocusedEl = document.activeElement;
+  lastFocusedEl = document.activeElement;
 
-      const status = getStatusTag(row);
-      const crit = getCriticidade(row);
+  const status = getStatusTag(row);
+  const crit = getCriticidade(row);
 
-      const fields = [
-        { label: "Equipe", value: row.equipe || "—" },
-        { label: "Data", value: row.data || "—" },
-        { label: "Placa", value: row.placa || "—" },
-        { label: "Tipo", value: row.tipo || "—" },
-        { label: "Criticidade", value: (crit === "alta" ? "Alta" : crit === "media" ? "Média" : crit === "baixa" ? "Baixa" : "—") },
-        { label: "Status", value: status.text || "—" },
-        { label: "Tratado", value: (normalize(row.tratado) === "true" ? "TRUE" : (normalize(row.tratado) === "false" ? "FALSE" : "—")) },
-        { label: "Observações", value: (row.observacoes || "—") }
-      ];
+  const fields = [
+    { label: 'Cliente', value: getCliente(row) || '—' },
+    { label: 'Equipe', value: row.equipe || '—' },
+    { label: 'Data', value: row.data || '—' },
+    { label: 'Placa', value: row.placa || '—' },
+    { label: 'Tipo', value: row.tipo || '—' },
+    { label: 'Criticidade', value: (crit === 'alta' ? 'Alta' : (crit === 'media' ? 'Média' : (crit === 'baixa' ? 'Baixa' : '—'))) },
+    { label: 'Status', value: status.text || '—' },
+    { label: 'Tratado', value: (normalize(row.tratado) === 'true' ? 'TRUE' : (normalize(row.tratado) === 'false' ? 'FALSE' : '—')) },
+    { label: 'Observações', value: row.observacoes || '—' }
+  ];
 
-      body.innerHTML = `
-        <div class="mv-details-grid">
-          ${fields.map(f => `
-            <div class="mv-detail">
-              <div class="mv-detail-label">${escapeHtml(f.label)}</div>
-              <div class="mv-detail-value">${escapeHtml(f.value)}</div>
-            </div>
-          `).join("")}
+  body.innerHTML = `
+    <div class="mv-details-grid">
+      ${fields.map(f => `
+        <div class="mv-detail">
+          <div class="mv-detail-label">${escapeHtml(f.label)}</div>
+          <div class="mv-detail-value">${escapeHtml(f.value)}</div>
         </div>
-      `;
+      `).join('')}
+    </div>
+  `;
 
-      overlay.classList.add("open");
-      overlay.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  if (closeBtn) closeBtn.focus();
+}
 
-      if (closeBtn) closeBtn.focus();
-    }
+function closeDetailsModal(){
+  const { overlay } = getModalEls();
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') lastFocusedEl.focus();
+}
 
-    function closeDetailsModal(){
-      const { overlay } = getModalEls();
-      if (!overlay) return;
+document.addEventListener('click', (e) => {
+  const detailsBtn = e.target.closest('button.mv-details-btn[data-details="1"]');
+  if (detailsBtn) {
+    const idx = Number(detailsBtn.getAttribute('data-row'));
+    if (!Number.isNaN(idx) && mvLastRendered && mvLastRendered[idx]) openDetailsModal(mvLastRendered[idx]);
+    return;
+  }
 
-      overlay.classList.remove("open");
-      overlay.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
+  if (e.target && e.target.id === 'mvModalClose') {
+    closeDetailsModal();
+    return;
+  }
 
-      if (lastFocusedEl && typeof lastFocusedEl.focus === "function"){
-        lastFocusedEl.focus();
-      }
-    }
+  const overlay = el('mvModalOverlay');
+  if (overlay && e.target === overlay) closeDetailsModal();
+});
 
-    // Delegação de eventos: funciona mesmo após re-render da tabela
-    document.addEventListener("click", (e) => {
-      const detailsBtn = e.target.closest("button.mv-details-btn[data-details='1']");
-      if (detailsBtn){
-        const idx = Number(detailsBtn.getAttribute("data-row"));
-        if (!Number.isNaN(idx) && mvLastRendered && mvLastRendered[idx]){
-          openDetailsModal(mvLastRendered[idx]);
-        }
-        return;
-      }
+document.addEventListener('keydown', (e) => {
+  const overlay = el('mvModalOverlay');
+  if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) closeDetailsModal();
+});
 
-      if (e.target && e.target.id === "mvModalClose"){
-        closeDetailsModal();
-        return;
-      }
+// ============================== 
+// Criticidade (persistência)
+// ============================== 
+const CRIT_KEY = 'portal_vmo_manutencao_criticidade_v1';
 
-      const overlay = document.getElementById("mvModalOverlay");
-      if (overlay && e.target === overlay){
-        closeDetailsModal();
-      }
+function rowKey(row){
+  return encodeURIComponent(`${row.equipe || ''}|${row.data || ''}|${row.placa || ''}|${row.tipo || ''}`);
+}
+
+function loadCritMap(){
+  try {
+    return JSON.parse(localStorage.getItem(CRIT_KEY) || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveCritMap(map){
+  localStorage.setItem(CRIT_KEY, JSON.stringify(map));
+}
+
+function getCriticidade(row){
+  const map = loadCritMap();
+  const key = rowKey(row);
+  const stored = map[key];
+  const base = normalize(row.criticidade);
+  return stored || (base ? base : 'media');
+}
+
+function setCriticidade(row, value){
+  const map = loadCritMap();
+  map[rowKey(row)] = value;
+  saveCritMap(map);
+}
+
+// ============================== 
+// Data helpers
+// ============================== 
+function parseAnyDate(value){
+  const s = (value || '').toString().trim();
+  if (!s) return null;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const [y,m,d] = s.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  const parts = s.split(' ');
+  const datePart = parts[0] || '';
+  const timePart = parts[1] || '';
+
+  let dd, mm, yyyy;
+  if (datePart.includes('-')) [dd, mm, yyyy] = datePart.split('-').map(Number);
+  else if (datePart.includes('/')) [dd, mm, yyyy] = datePart.split('/').map(Number);
+  else return null;
+
+  if (!dd || !mm || !yyyy) return null;
+
+  let hh = 0, min = 0;
+  if (timePart.includes(':')) {
+    const [h, m] = timePart.split(':').map(Number);
+    hh = Number.isFinite(h) ? h : 0;
+    min = Number.isFinite(m) ? m : 0;
+  }
+
+  return new Date(yyyy, mm - 1, dd, hh, min, 0, 0);
+}
+
+function inDateRange(rowDate, startISO, endISO){
+  if (!startISO && !endISO) return true;
+  if (!rowDate) return false;
+  const start = startISO ? parseAnyDate(startISO) : null;
+  const end = endISO ? parseAnyDate(endISO) : null;
+  if (end) end.setHours(23, 59, 59, 999);
+  if (start && rowDate < start) return false;
+  if (end && rowDate > end) return false;
+  return true;
+}
+
+// ============================== 
+// Status
+// ============================== 
+function getStatusTag(row){
+  const tratado = normalize(row.tratado);
+  const pend = normalize(row.status) === 'pendente';
+  if (pend) return { text: 'Pendente', cls: 'warn' };
+  if (tratado === 'true') return { text: 'Tratado', cls: 'ok' };
+  if (tratado === 'false') return { text: 'Não tratado', cls: 'danger' };
+  return { text: '—', cls: 'neutral' };
+}
+
+// ============================== 
+// Popula filtros
+// ============================== 
+function populateClienteFilter(){
+  const current = normalize(filterCliente.value);
+  const clientes = [...new Set(mvData.map(r => (getCliente(r) || '').toString().trim()).filter(Boolean))]
+    .sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+  filterCliente.innerHTML = '<option value="">Todos</option>';
+  clientes.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = normalize(c);
+    opt.textContent = c;
+    filterCliente.appendChild(opt);
+  });
+
+  if (current && clientes.some(c => normalize(c) === current)) filterCliente.value = current;
+  else filterCliente.value = '';
+}
+
+function populateEquipeFilter(){
+  const current = normalize(filterEquipe.value);
+  const equipes = [...new Set(mvData.map(r => (r.equipe || '').toString().trim()).filter(Boolean))]
+    .sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+  filterEquipe.innerHTML = '<option value="">Todas</option>';
+  equipes.forEach(eq => {
+    const opt = document.createElement('option');
+    opt.value = normalize(eq);
+    opt.textContent = eq;
+    filterEquipe.appendChild(opt);
+  });
+
+  if (current && equipes.some(eq => normalize(eq) === current)) filterEquipe.value = current;
+  else filterEquipe.value = '';
+}
+
+// ============================== 
+// Render
+// ============================== 
+function renderTable(list){
+  mvLastRendered = list;
+  tbody.innerHTML = '';
+
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="mv-empty">Nenhum registro encontrado com os filtros atuais.</td></tr>';
+    return;
+  }
+
+  list.forEach((row, i) => {
+    const status = getStatusTag(row);
+    const tipo = row.tipo || '—';
+    const crit = getCriticidade(row);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(getCliente(row) || '—')}</td>
+      <td>${escapeHtml(row.equipe || '—')}</td>
+      <td>${escapeHtml(row.data || '—')}</td>
+      <td><strong>${escapeHtml(row.placa || '—')}</strong></td>
+      <td>${escapeHtml(tipo)}</td>
+      <td>
+        <select class="crit-select ${crit}" data-crit="1" aria-label="Selecionar criticidade">
+          <option value="baixa" ${crit === 'baixa' ? 'selected' : ''}>Baixa</option>
+          <option value="media" ${crit === 'media' ? 'selected' : ''}>Média</option>
+          <option value="alta" ${crit === 'alta' ? 'selected' : ''}>Alta</option>
+        </select>
+      </td>
+      <td><span class="badge ${status.cls}">${status.text}</span></td>
+      <td>
+        <button type="button" class="mv-details-btn" data-details="1" data-row="${i}">Ver detalhes</button>
+      </td>
+    `;
+
+    const select = tr.querySelector('select[data-crit="1"]');
+    select.addEventListener('change', () => {
+      const val = normalize(select.value);
+      setCriticidade(row, val);
+      select.classList.remove('baixa','media','alta');
+      select.classList.add(val);
+      applyFilters();
     });
 
-    document.addEventListener("keydown", (e) => {
-      const overlay = document.getElementById("mvModalOverlay");
-      if (e.key === "Escape" && overlay && overlay.classList.contains("open")){
-        closeDetailsModal();
-      }
-    });
-// ==============================
-    // Criticidade (persistência)
-    // ==============================
-    const CRIT_KEY = "portal_vmo_manutencao_criticidade_v1";
+    tbody.appendChild(tr);
+  });
+}
 
-    function rowKey(row){
-      // chave estável: equipe + data + placa + tipo
-      return encodeURIComponent(`${row.equipe || ""}|${row.data || ""}|${row.placa || ""}|${row.tipo || ""}`);
+function updateKpis(all){
+  const total = all.length;
+  const tratados = all.filter(r => normalize(r.tratado) === 'true').length;
+  const naoTratados = all.filter(r => normalize(r.tratado) === 'false').length;
+  const pendentes = all.filter(r => normalize(r.status) === 'pendente').length;
+
+  el('kpiTotal').textContent = total;
+  el('kpiTrue').textContent = tratados;
+  el('kpiFalse').textContent = naoTratados;
+  el('kpiPendentes').textContent = pendentes;
+}
+
+// ============================== 
+// Filtros
+// ============================== 
+function applyFilters(){
+  const cli = normalize(filterCliente.value);
+  const eq = normalize(filterEquipe.value);
+  const ds = filterDateStart.value;
+  const de = filterDateEnd.value;
+  const cr = normalize(filterCriticidade.value);
+  const tipo = normalize(filterTipo.value);
+  const st = normalize(filterStatus.value);
+
+  const filtered = mvData.filter(row => {
+    const rowCliente = normalize(getCliente(row));
+    if (cli && rowCliente !== cli) return false;
+
+    if (eq && normalize(row.equipe) !== eq) return false;
+
+    const rowDate = parseAnyDate(row.data);
+    if (!inDateRange(rowDate, ds, de)) return false;
+
+    if (cr) {
+      const rowCrit = getCriticidade(row);
+      if (rowCrit !== cr) return false;
     }
 
-    function loadCritMap(){
-      try{
-        return JSON.parse(localStorage.getItem(CRIT_KEY) || "{}") || {};
-      }catch(e){
-        return {};
-      }
-    }
+    if (tipo && normalize(row.tipo) !== tipo) return false;
 
-    function saveCritMap(map){
-      localStorage.setItem(CRIT_KEY, JSON.stringify(map));
-    }
-
-    function getCriticidade(row){
-      const map = loadCritMap();
-      const key = rowKey(row);
-      const stored = map[key];
-      const base = normalize(row.criticidade);
-      // padrão: média
-      return stored || (base ? base : "media");
-    }
-
-    function setCriticidade(row, value){
-      const map = loadCritMap();
-      map[rowKey(row)] = value;
-      saveCritMap(map);
-    }
-
-    // ==============================
-    // Data helpers
-    // ==============================
-    // Aceita:
-    // - "DD-MM-AAAA HH:mm"
-    // - "DD/MM/AAAA"
-    // - "AAAA-MM-DD" (date input)
-    function parseAnyDate(value){
-      const s = (value || "").toString().trim();
-      if (!s) return null;
-
-      if (/^\d{4}-\d{2}-\d{2}$/.test(s)){
-        const [y,m,d] = s.split("-").map(Number);
-        return new Date(y, m - 1, d);
-      }
-
-      const parts = s.split(" ");
-      const datePart = parts[0] || "";
-      const timePart = parts[1] || "";
-
-      let dd, mm, yyyy;
-      if (datePart.includes("-")){
-        [dd, mm, yyyy] = datePart.split("-").map(Number);
-      } else if (datePart.includes("/")){
-        [dd, mm, yyyy] = datePart.split("/").map(Number);
-      } else {
-        return null;
-      }
-
-      if (!dd || !mm || !yyyy) return null;
-
-      let hh = 0, min = 0;
-      if (timePart && timePart.includes(":")){
-        const [h, m] = timePart.split(":").map(Number);
-        hh = Number.isFinite(h) ? h : 0;
-        min = Number.isFinite(m) ? m : 0;
-      }
-
-      return new Date(yyyy, mm - 1, dd, hh, min, 0, 0);
-    }
-
-    function inDateRange(rowDate, startISO, endISO){
-      if (!startISO && !endISO) return true;
-      if (!rowDate) return false;
-
-      const start = startISO ? parseAnyDate(startISO) : null;
-      const end = endISO ? parseAnyDate(endISO) : null;
-      if (end) end.setHours(23, 59, 59, 999); // inclusivo
-
-      if (start && rowDate < start) return false;
-      if (end && rowDate > end) return false;
-      return true;
-    }
-
-    // ==============================
-    // Status
-    // ==============================
-    function getStatusTag(row){
+    if (st) {
       const tratado = normalize(row.tratado);
-      const pend = normalize(row.status) === "pendente";
-      if (pend) return { text: "Pendente", cls: "warn" };
-      if (tratado === "true") return { text: "Tratado", cls: "ok" };
-      if (tratado === "false") return { text: "Não tratado", cls: "danger" };
-      return { text: "—", cls: "neutral" };
+      const pendente = normalize(row.status) === 'pendente';
+      if (st === 'pendente' && !pendente) return false;
+      if (st === 'tratado' && tratado !== 'true') return false;
+      if (st === 'nao_tratado' && tratado !== 'false') return false;
     }
 
-    // ==============================
-    // Popula filtro de equipe
-    // ==============================
-    function populateEquipeFilter(){
-      const current = normalize(filterEquipe.value);
+    return true;
+  });
 
-      const equipes = [...new Set(mvData.map(r => (r.equipe || "").toString().trim()).filter(Boolean))]
-        .sort((a,b) => a.localeCompare(b, "pt-BR"));
+  renderTable(filtered);
+  updateKpis(mvData);
+}
 
-      filterEquipe.innerHTML = `<option value="">Todas</option>`;
-      equipes.forEach(eq => {
-        const opt = document.createElement("option");
-        opt.value = normalize(eq);
-        opt.textContent = eq;
-        filterEquipe.appendChild(opt);
-      });
-
-      if (current){
-        const stillExists = equipes.some(eq => normalize(eq) === current);
-        filterEquipe.value = stillExists ? current : "";
-      } else {
-        filterEquipe.value = "";
-      }
-    }
-
-    // ==============================
-    // Render
-    // ==============================
-    function renderTable(list){
-      mvLastRendered = list;
-      tbody.innerHTML = "";
-      if (!list.length){
-        tbody.innerHTML = `
-          <tr><td colspan="7" class="mv-empty">Nenhum registro encontrado com os filtros atuais.</td></tr>
-        `;
-        return;
-      }
-
-      list.forEach((row, i) => {
-      const rowIndex = i;
-        const status = getStatusTag(row);
-        const obs = (row.observacoes || "").toString();
-        const short = obs.length > 55 ? obs.slice(0, 55) + "..." : obs;
-        const tipo = row.tipo || "—";
-
-        const crit = getCriticidade(row);
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${row.equipe || "—"}</td>
-          <td>${row.data || "—"}</td>
-          <td><strong>${row.placa || "—"}</strong></td>
-          <td>${tipo}</td>
-          <td>
-            <select class="crit-select ${crit}" data-crit="1" aria-label="Selecionar criticidade">
-              <option value="baixa" ${crit === "baixa" ? "selected" : ""}>Baixa</option>
-              <option value="media" ${crit === "media" ? "selected" : ""}>Média</option>
-              <option value="alta" ${crit === "alta" ? "selected" : ""}>Alta</option>
-            </select>
-          </td>
-          <td><span class="badge ${status.cls}">${status.text}</span></td>
-          <td>
-  <button type="button" class="mv-details-btn" data-details="1" data-row="${rowIndex}">Ver detalhes</button>
-</td>
-        `;
-
-        // listener criticidade
-        const select = tr.querySelector('select[data-crit="1"]');
-        select.addEventListener("change", () => {
-          const val = normalize(select.value);
-          setCriticidade(row, val);
-          select.classList.remove("baixa", "media", "alta");
-          select.classList.add(val);
-          applyFilters();
-        });
-
-        tbody.appendChild(tr);
-      });
-
-      tbody.querySelectorAll(".mv-more").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const full = decodeURIComponent(btn.getAttribute("data-full"));
-          alert(full);
-        });
-      });
-    }
-
-    function updateKpis(all){
-      if (!all.length) return;
-
-      const total = all.length;
-      const tratados = all.filter(r => normalize(r.tratado) === "true").length;
-      const naoTratados = all.filter(r => normalize(r.tratado) === "false").length;
-      const pendentes = all.filter(r => normalize(r.status) === "pendente").length;
-
-      el("kpiTotal").textContent = total;
-      el("kpiTrue").textContent = tratados;
-      el("kpiFalse").textContent = naoTratados;
-      el("kpiPendentes").textContent = pendentes;
-    }
-
-    // ==============================
-    // Filtros
-    // ==============================
-    function applyFilters(){
-      const eq = normalize(filterEquipe.value);
-      const ds = filterDateStart.value;
-      const de = filterDateEnd.value;
-      const cr = normalize(filterCriticidade.value);
-      const tipo = normalize(filterTipo.value);
-      const st = normalize(filterStatus.value);
-
-      const filtered = mvData.filter(row => {
-        // Equipe
-        if (eq && normalize(row.equipe) !== eq) return false;
-
-        // Data (intervalo)
-        const rowDate = parseAnyDate(row.data);
-        if (!inDateRange(rowDate, ds, de)) return false;
-
-        // Criticidade
-        if (cr){
-          const rowCrit = getCriticidade(row);
-          if (rowCrit !== cr) return false;
-        }
-
-        // Tipo
-        if (tipo && normalize(row.tipo) !== tipo) return false;
-
-        // Status
-        if (st){
-          const tratado = normalize(row.tratado);
-          const pendente = normalize(row.status) === "pendente";
-          if (st === "pendente" && !pendente) return false;
-          if (st === "tratado" && tratado !== "true") return false;
-          if (st === "nao_tratado" && tratado !== "false") return false;
-        }
-
-        return true;
-      });
-
-      renderTable(filtered);
-      updateKpis(mvData);
-    }
-
-    // ==============================
-    // Import (Excel/CSV)
-    // ==============================
-    function parsePasted(text){
-      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      if (lines.length < 2) return [];
-
-      const headerLine = lines[0];
-      let sep = "\t";
-      if (!headerLine.includes("\t") && headerLine.includes(";")) sep = ";";
-      if (!headerLine.includes("\t") && headerLine.includes(",") && !headerLine.includes(";")) sep = ",";
-
-      const headers = headerLine.split(sep).map(h => normalize(h));
-
-      const idx = (nameVariants) => {
-        for (const v of nameVariants){
-          const i = headers.indexOf(normalize(v));
-          if (i >= 0) return i;
-        }
-        return -1;
-      };
-
-      const iEquipe = idx(["equipe","equipe / grupo","grupo"]);
-      const iData = idx(["data","data agendamento","data agendada","data agendamento"]);
-      const iPlaca = idx(["placa","placa do veiculo","placa do veículo"]);
-      const iTipo = idx(["tipo","tipo veiculo","tipo do veiculo","tipo do veículo"]);
-      const iObs = idx(["observacoes","observações","obs"]);
-      const iTratado = idx(["tratado","true/false","status tratado"]);
-      const iCrit = idx(["criticidade","crit"]);
-
-      const out = [];
-      for (let r = 1; r < lines.length; r++){
-        const cols = lines[r].split(sep).map(c => c.trim());
-        if (cols.length < 3) continue;
-
-        const row = {
-          equipe: iEquipe >= 0 ? cols[iEquipe] : "",
-          data: iData >= 0 ? cols[iData] : "",
-          placa: iPlaca >= 0 ? cols[iPlaca] : "",
-          tipo: iTipo >= 0 ? cols[iTipo] : "",
-          observacoes: iObs >= 0 ? cols[iObs] : "",
-          tratado: iTratado >= 0 ? cols[iTratado] : "",
-          criticidade: iCrit >= 0 ? normalize(cols[iCrit]) : "",
-          status: ""
-        };
-
-        // normaliza criticidade caso venha como "alto/médio/baixo"
-        if (row.criticidade === "alto") row.criticidade = "alta";
-        if (row.criticidade === "médio" || row.criticidade === "medio") row.criticidade = "media";
-        if (row.criticidade === "baixo") row.criticidade = "baixa";
-
-        // Heurística: se texto tiver "pend" nas observações, marca como pendente
-        if (normalize(row.observacoes).includes("pend")) row.status = "pendente";
-
-        out.push(row);
-      }
-      return out;
-    }
-
-    
-// ==============================
-// PDF - Baixar Relatório
-// ==============================
-
+// ============================== 
+// PDF - Baixar Relatório (jsPDF + AutoTable) + KPIs
+// ============================== 
 function formatNow(){
   const d = new Date();
   const pad = (n) => String(n).padStart(2,'0');
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
 }
 
+function getSelectedText(sel, fallback){
+  if (!sel) return fallback || '';
+  const opt = sel.options && sel.selectedIndex >= 0 ? sel.options[sel.selectedIndex] : null;
+  return opt ? (opt.textContent || sel.value || fallback || '') : (sel.value || fallback || '');
+}
+
 function getFiltroResumo(){
-  const eqTxt = (filterEquipe && filterEquipe.value) ? (filterEquipe.options[filterEquipe.selectedIndex]?.textContent || filterEquipe.value) : 'Todas';
-  const ds = filterDateStart?.value ? filterDateStart.value : '—';
-  const de = filterDateEnd?.value ? filterDateEnd.value : '—';
-  const crTxt = (filterCriticidade && filterCriticidade.value) ? (filterCriticidade.options[filterCriticidade.selectedIndex]?.textContent || filterCriticidade.value) : 'Todas';
-  const tipoTxt = (filterTipo && filterTipo.value) ? (filterTipo.options[filterTipo.selectedIndex]?.textContent || filterTipo.value) : 'Todos';
-  const stTxt = (filterStatus && filterStatus.value) ? (filterStatus.options[filterStatus.selectedIndex]?.textContent || filterStatus.value) : 'Todos';
-  return { eqTxt, ds, de, crTxt, tipoTxt, stTxt };
+  const cliTxt = filterCliente.value ? getSelectedText(filterCliente, 'Todos') : 'Todos';
+  const eqTxt = filterEquipe.value ? getSelectedText(filterEquipe, 'Todas') : 'Todas';
+  const ds = filterDateStart.value || '—';
+  const de = filterDateEnd.value || '—';
+  const crTxt = filterCriticidade.value ? getSelectedText(filterCriticidade, 'Todas') : 'Todas';
+  const tipoTxt = filterTipo.value ? getSelectedText(filterTipo, 'Todos') : 'Todos';
+  const stTxt = filterStatus.value ? getSelectedText(filterStatus, 'Todos') : 'Todos';
+  return { cliTxt, eqTxt, ds, de, crTxt, tipoTxt, stTxt };
+}
+
+function getKpisFromTela(){
+  const num = (id) => {
+    const node = el(id);
+    const v = node ? (node.textContent || '').trim() : '0';
+    const n = parseInt(v, 10);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return {
+    total: num('kpiTotal'),
+    tratadas: num('kpiTrue'),
+    naoTratada: num('kpiFalse'),
+    pendentes: num('kpiPendentes')
+  };
+}
+
+function drawKpiCards(doc, x0, y0, pageWidth){
+  const gap = 6;
+  const cardW = (pageWidth - x0*2 - gap*3) / 4;
+  const cardH = 22;
+  const k = getKpisFromTela();
+
+  const cards = [
+    { label: 'TOTAL DE REGISTROS', value: String(k.total), hint: 'Soma geral do controle', bar: [149, 165, 166] },
+    { label: 'TRATADAS (TRUE)', value: String(k.tratadas), hint: 'Já tratadas/atendidas', bar: [46, 204, 113] },
+    { label: 'NÃO TRATADAS (FALSE)', value: String(k.naoTratada), hint: 'Atenção / precisa ação', bar: [231, 76, 60] },
+    { label: 'PENDENTES', value: String(k.pendentes), hint: 'Em andamento / aguardando', bar: [243, 156, 18] }
+  ];
+
+  for (let i = 0; i < cards.length; i++){
+    const c = cards[i];
+    const x = x0 + i * (cardW + gap);
+
+    doc.setDrawColor(230);
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(x, y0, cardW, cardH, 3, 3, 'FD');
+
+    doc.setFillColor(c.bar[0], c.bar[1], c.bar[2]);
+    doc.roundedRect(x, y0, 2.6, cardH, 2, 2, 'F');
+
+    doc.setTextColor(90);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.text(c.label, x + 6, y0 + 7);
+
+    doc.setTextColor(20);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text(c.value, x + 6, y0 + 15);
+
+    doc.setTextColor(120);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.text(c.hint, x + 6, y0 + 20);
+  }
+
+  return y0 + cardH;
 }
 
 function gerarPdfRelatorio(){
-  if (typeof html2pdf === 'undefined'){
-    alert('Biblioteca de PDF (html2pdf) não carregou. Verifique sua internet e tente novamente.');
+  if (!window.jsPDF) {
+    alert('Biblioteca jsPDF não carregou. Verifique sua conexão e tente novamente.');
     return;
   }
 
   const rows = Array.isArray(mvLastRendered) ? mvLastRendered : [];
-  if (!rows.length){
+  if (!rows.length) {
     alert('Sem registros visíveis para gerar o relatório.');
     return;
   }
 
-  const { eqTxt, ds, de, crTxt, tipoTxt, stTxt } = getFiltroResumo();
+  const doc = new window.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  if (typeof doc.autoTable !== 'function') {
+    alert('Plugin AutoTable não carregou. Verifique sua conexão e tente novamente.');
+    return;
+  }
 
-  const wrap = document.createElement('div');
-  wrap.className = 'mv-print-area';
+  const { cliTxt, eqTxt, ds, de, crTxt, tipoTxt, stTxt } = getFiltroResumo();
+  const titulo = 'Relatório - Manutenção de viaturas';
+  const geradoEm = new Date().toLocaleString('pt-BR');
+  const pageWidth = doc.internal.pageSize.getWidth();
 
-  const title = 'Relatório - Manutenção de viaturas';
-  const meta = `
-    <div class="meta">
-      <div><strong>Gerado em:</strong> ${escapeHtml(new Date().toLocaleString('pt-BR'))}</div>
-      <div><strong>Filtros:</strong> Equipe: ${escapeHtml(eqTxt)} • Data: ${escapeHtml(ds)} até ${escapeHtml(de)} • Criticidade: ${escapeHtml(crTxt)} • Tipo: ${escapeHtml(tipoTxt)} • Status: ${escapeHtml(stTxt)}</div>
-      <div><strong>Total visível:</strong> ${rows.length}</div>
-    </div>
-  `;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(20);
+  doc.text(titulo, 14, 14);
 
-  const bodyRows = rows.map(r => {
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(60);
+  doc.text(`Gerado em: ${geradoEm}`, 14, 20);
+  doc.text(`Filtros: Cliente: ${cliTxt} • Equipe: ${eqTxt} • Data: ${ds} até ${de} • Criticidade: ${crTxt} • Tipo: ${tipoTxt} • Status: ${stTxt}`, 14, 26);
+  doc.text(`Total visível (tabela): ${rows.length}`, 14, 32);
+
+  const cardsBottom = drawKpiCards(doc, 14, 36, pageWidth);
+
+  const head = [[ 'Cliente', 'Equipe', 'Data', 'Placa', 'Tipo', 'Criticidade', 'Status', 'Observações' ]];
+  const body = rows.map(r => {
     const crit = getCriticidade(r);
     const critTxt = (crit === 'alta') ? 'Alta' : (crit === 'media' ? 'Média' : (crit === 'baixa' ? 'Baixa' : '—'));
     const status = getStatusTag(r);
-    const statusTxt = status?.text || '—';
-    const obsFull = (r.observacoes || '—').toString();
+    return [
+      (getCliente(r) || '—').toString(),
+      (r.equipe || '—').toString(),
+      (r.data || '—').toString(),
+      (r.placa || '—').toString(),
+      (r.tipo || '—').toString(),
+      critTxt,
+      (status.text || '—').toString(),
+      (r.observacoes || '—').toString()
+    ];
+  });
 
-    return `
-      <tr>
-        <td>${escapeHtml(r.equipe || '—')}</td>
-        <td>${escapeHtml(r.data || '—')}</td>
-        <td>${escapeHtml(r.placa || '—')}</td>
-        <td>${escapeHtml(r.tipo || '—')}</td>
-        <td>${escapeHtml(critTxt)}</td>
-        <td>${escapeHtml(statusTxt)}</td>
-        <td>${escapeHtml(obsFull)}</td>
-      </tr>
-    `;
-  }).join('');
-
-  wrap.innerHTML = `
-    <h2>${escapeHtml(title)}</h2>
-    ${meta}
-    <table>
-      <thead>
-        <tr>
-          <th>Equipe</th>
-          <th>Data</th>
-          <th>Placa</th>
-          <th>Tipo</th>
-          <th>Criticidade</th>
-          <th>Status</th>
-          <th>Observações</th>
-        </tr>
-      </thead>
-      <tbody>${bodyRows}</tbody>
-    </table>
-  `;
-
-  document.body.appendChild(wrap);
-
-  // força layout antes da captura
-  wrap.getBoundingClientRect();
-
-  const fileName = `relatorio_manutencao_viaturas_${formatNow()}.pdf`;
-
-  const opt = {
-    margin: [8, 8, 8, 8],
-    filename: fileName,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      scrollY: 0,
-      scrollX: 0,
-      windowWidth: wrap.scrollWidth,
-      windowHeight: wrap.scrollHeight
+  doc.autoTable({
+    head,
+    body,
+    startY: cardsBottom + 6,
+    styles: { font: 'helvetica', fontSize: 8, cellPadding: 2, valign: 'top' },
+    headStyles: { fillColor: [243, 243, 243], textColor: [34, 34, 34], fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 24 },
+      1: { cellWidth: 50 },
+      2: { cellWidth: 22 },
+      3: { cellWidth: 18 },
+      4: { cellWidth: 18 },
+      5: { cellWidth: 20 },
+      6: { cellWidth: 18 },
+      7: { cellWidth: 72 }
     },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-  };
+    didDrawPage: function () {
+      const pageCount = doc.getNumberOfPages();
+      const pageInfo = doc.internal.getCurrentPageInfo();
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      doc.setFontSize(9);
+      doc.setTextColor(120);
+      doc.text(`Página ${pageInfo.pageNumber} de ${pageCount}`, pageW - 34, pageH - 8);
+    }
+  });
 
-  // espera um pouco para garantir renderização completa
-  setTimeout(() => {
-    html2pdf().set(opt).from(wrap).save().then(() => {
-      wrap.remove();
-    }).catch((err) => {
-      wrap.remove();
-      console.error(err);
-      alert('Falha ao gerar o PDF. Abra o console (F12) para ver o erro.');
-    });
-  }, 250);
+  doc.save(`relatorio_manutencao_viaturas_${formatNow()}.pdf`);
 }
 
-// ==============================
-    // Eventos
-    // ==============================
-    ["input", "change"].forEach(evt => {
-      filterEquipe.addEventListener(evt, applyFilters);
-      filterDateStart.addEventListener(evt, applyFilters);
-      filterDateEnd.addEventListener(evt, applyFilters);
-      filterCriticidade.addEventListener(evt, applyFilters);
-      filterTipo.addEventListener(evt, applyFilters);
-      filterStatus.addEventListener(evt, applyFilters);
-    });
+// ============================== 
+// Eventos
+// ============================== 
+['input','change'].forEach(evt => {
+  filterCliente.addEventListener(evt, applyFilters);
+  filterEquipe.addEventListener(evt, applyFilters);
+  filterDateStart.addEventListener(evt, applyFilters);
+  filterDateEnd.addEventListener(evt, applyFilters);
+  filterCriticidade.addEventListener(evt, applyFilters);
+  filterTipo.addEventListener(evt, applyFilters);
+  filterStatus.addEventListener(evt, applyFilters);
+});
 
-    el("btnLimpar").addEventListener("click", () => {
-      filterEquipe.value = "";
-      filterDateStart.value = "";
-      filterDateEnd.value = "";
-      filterCriticidade.value = "";
-      filterTipo.value = "";
-      filterStatus.value = "";
-      applyFilters();
-    });
+el('btnLimpar').addEventListener('click', () => {
+  filterCliente.value = '';
+  filterEquipe.value = '';
+  filterDateStart.value = '';
+  filterDateEnd.value = '';
+  filterCriticidade.value = '';
+  filterTipo.value = '';
+  filterStatus.value = '';
+  applyFilters();
+});
 
-    el("btnCarregar").addEventListener("click", () => {
-      const txt = el("pasteData").value.trim();
-      const parsed = parsePasted(txt);
-      if (!parsed.length){
-        alert("Não consegui ler os dados. Cole novamente com cabeçalho + linhas (preferencialmente do Excel).\n\nDica: Cole com colunas: Equipe, Data agendamento, Placa, Tipo, Observações, Tratado");
-        return;
-      }
-      mvData = parsed;
-      populateEquipeFilter();
-      applyFilters();
-    });
-
-    el("btnExemplo").addEventListener("click", () => {
-      mvData = [
-        {
-          "equipe": "SP - CAMPINAS - BASE — ISACTEEP SPI - EQUIPE 4 - CABREUVA",
-          "data": "01-02-2026 06:00",
-          "placa": "TEJ6G14",
-          "tipo": "Carro",
-          "observacoes": "Avaria no parachoque trazeiro",
-          "tratado": "TRUE",
-          "status": "",
-          "criticidade": "media"
-        },
-        {
-          "equipe": "SPI - GUARAREMA - 01 — VMO - TBG - GUARAREMA",
-          "data": "01-02-2026 06:00",
+el('btnExemplo').addEventListener('click', () => {
+  mvData = [
+{
+          "equipe": "VMO - TBG - GUARAREMA",
+          "cliente": "TBG",
+          "data": "01-02-2026 18:00",
           "placa": "TEW2E60",
-          "tipo": "SUV",
-          "observacoes": "Equipe Diurna: Adomiciano Costa, MT: 5704169. Condutor: 06h às 12h. Alvaro Cunha, MT: 5704171. Condutor: 12h às 18h.",
+          "tipo": "Pickup",
+          "observacoes": "Condutor nesta data Diego Peres MT 5704167",
+          "tratado": "TRUE",
+          "status": "Fianlizado",
+          "criticidade": "Baixa"
+        },
+{
+          "equipe": "ISACTEEP SPI - EQUIPE BAIXADA",
+          "cliente": "ISACTEEP",
+          "data": "01-02-2026 18:00",
+          "placa": "TEA3H97",
+          "tipo": "Carro",
+          "observacoes": "N/A carro apitando",
           "tratado": "FALSE",
           "status": "pendente",
-          "criticidade": "alta"
+          "criticidade": "media"
         },
-        {
-          "equipe": "BA - SALVADOR - BASE — EQUIPE VMO - QUEPAR - BAHIA",
+{
+          "equipe": "EQUIPE VMO - QUEPAR - BAHIA",
+          "cliente": "QUEPAR",
           "data": "02-02-2026 10:00",
           "placa": "TDG9F48",
           "tipo": "Carro",
           "observacoes": "Abertura para início da ronda da QUEPAR",
-          "tratado": "FALSE",
-          "status": "pendente",
-          "criticidade": "baixa"
+          "tratado": "TRUE",
+          "status": "Fianalizado",
+          "criticidade": "Baixa"
         },
-
-        {
+{
           "equipe": "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
-          "data": "13-02-2026 18:00",
+          "cliente": "ISACTEEP",
+          "data": "02-02-2026 18:00",
           "placa": "TEA3H97",
           "tipo": "Carro",
-          "observacoes": "N/A carro apitando  sem parar ",
+          "observacoes": "Veículo com  problema  na telemetria",
           "tratado": "FALSE",
           "status": "pendente",
+          "criticidade": "media"
+        },
+{
+          "equipe": "Zona Operativa 4 - Telefônica",
+          "cliente": "VIVO",
+          "data": "02-02-2026 19:00",
+          "placa": "TEA3H70",
+          "tipo": "Carro",
+          "observacoes": "Revisar airbag.\nFarol alto lado esquerdo não funciona",
+          "tratado": "FALSE",
+          "status": "pendente",
+          "criticidade": "media"
+        },
+{
+          "equipe": "ISACTEEP SPI - EQUIPE 4 - CABREUVA",
+          "cliente": "ISACTEEP",
+          "data": "03-02-2026 06:00",
+          "placa": "TEJ6G14",
+          "tipo": "Carro",
+          "observacoes": "Avaria no parachoque trazeiro",
+          "tratado": "TRUE",
+          "status": "Fianalizado",
+          "criticidade": "Baixa"
+        },
+{
+          "equipe": "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
+          "cliente": "ISACTEEP",
+          "data": "03-02-2026 18:00",
+          "placa": "TEA3H97",
+          "tipo": "Carro",
+          "observacoes": "N/A carro com telemetria apitando sem parar",
+          "tratado": "FALSE",
+          "status": "pendente",
+          "criticidade": "media"
+        },
+{
+          "equipe": "EQUIPE VMO - QUEPAR - BAHIA",
+          "cliente": "QUEPAR",
+          "data": "04-02-2026 10:00",
+          "placa": "TDG9F48",
+          "tipo": "Carro",
+          "observacoes": "Abertura da agenda para início a Ronda da QUEPAR.",
+          "tratado": "TRUE",
+          "status": "Finalizado",
           "criticidade": "baixa"
         },
-      ];
-      populateEquipeFilter();
-      applyFilters();
-    });
 
- el("btnBaixarRelatorio").addEventListener("click", gerarPdfRelatorio);
+{
+          "equipe": "VMO - TBG - GUARAREMA",
+          "cliente": "TBG",
+          "data": "05-02-2026 18:00",
+          "placa": "TEW2E60",
+          "tipo": "Pickup",
+          "observacoes": "Paralamas traseiro com pequeno arranhão do lado direito próximo ao para-choque.\n\nCondutor nesta data\nDiego Peres MT 5704167",
+          "tratado": "TRUE",
+          "status": "Fianalizado",
+          "criticidade": "Baixa"
+        },
 
-    // Inicializa
-    applyFilters();
-  </script>
+{
+          "equipe": "ISACTEEP SPI - EQUIPE 4 - CABREUVA",
+          "cliente": "ISACTEEP",
+          "data": "07-02-2026 06:00",
+          "placa": "TEJ6G14",
+          "tipo": "Carro",
+          "observacoes": "Avaria  no parachoque  traseiro\nLâmpada  luz baixa do lado direito  queimada",
+          "tratado": "TRUE",
+          "status": "Finalizado",
+          "criticidade": "media"
+        },
+{
+          "equipe": "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO",
+          "cliente": "ISACTEEP",
+          "data": "07-02-2026 18:00",
+          "placa": "TEA3H97",
+          "tipo": "Carro",
+          "observacoes": "N/A o carro apitando sem parar\nTelemetria ruim  carro com defeito",
+          "tratado": "FALSE",
+          "status": "pendente",
+          "criticidade": "media"
+        },
+{
+          "equipe": "ISACTEEP SPI - EQUIPE 4 - CABREUVA",
+          "cliente": "ISACTEEP",
+          "data": "11-02-2026 06:00",
+          "placa": "TEJ6G14",
+          "tipo": "Carro",
+          "observacoes": "avaria no parachoque  trazeiro",
+           "tratado": "TRUE",
+          "status": "Fianalizado",
+          "criticidade": "Baixa"
+        },
+{
+          "equipe": "VMO - TBG - GUARAREMA",
+          "cliente": "TBG",
+          "data": "11-02-2026 18:00",
+          "placa": "TEW2E60",
+          "tipo": "Pickup",
+          "observacoes": "VTR está sem a placa Dianteira",
+          "tratado": "TRUE",
+          "status": "Finalizado",
+          "criticidade": "media"
+        },
+
+        
+
+  ];
+  populateClienteFilter();
+  populateEquipeFilter();
+  applyFilters();
+});
+
+el('btnBaixarRelatorio').addEventListener('click', gerarPdfRelatorio);
+
+// Inicializa
+populateClienteFilter();
+populateEquipeFilter();
+applyFilters();
+</script>
 </body>
 </html>
