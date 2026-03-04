@@ -40,7 +40,7 @@
 
     .mx-toolbar{
       display:grid;
-      grid-template-columns: 1fr 1.6fr 1fr 1fr 1fr auto;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
       gap:10px;
       align-items:end;
       margin-top:6px;
@@ -237,7 +237,6 @@
     align-items:flex-start;
     justify-content:space-between;
     gap:10px;
-    border-left-color:#eeb60d; 
   }
   .mx-client-title .name{
     font-size:12px;
@@ -413,18 +412,20 @@ h78.747C231.693,100.736,232.77,106.162,232.77,111.694z"></path>
 
       <!-- Filtros -->
       <div class="mx-toolbar">
+
         <div class="mx-field">
-  <label for="filterCliente">Cliente</label>
-  <select id="filterCliente">
-    <option value="">Todos</option>
-  </select>
-</div>
-<div class="mx-field">
-  <label for="filterEquipe">Equipe</label>
-  <select id="filterEquipe">
-    <option value="">Todas</option>
-  </select>
-</div>
+          <label for="filterCliente">Cliente</label>
+          <select id="filterCliente">
+            <option value="">Todos</option>
+          </select>
+        </div>
+
+        <div class="mx-field">
+          <label for="filterEquipe">Equipe</label>
+          <select id="filterEquipe">
+            <option value="">Todas</option>
+          </select>
+        </div>
         <div class="mx-field">
           <label for="filterMes">Mês</label>
           <select id="filterMes">
@@ -540,28 +541,27 @@ const matrixData = [
 
     // ========= FEVEREIRO/2026 =========
     
-    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 29, kmPermitidoAteMomento: 580, rodadoAteMomento: 389 },
-    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE INTERLAGOS", kmContratado: 500, kmDisponivelDia: 18, kmPermitidoAteMomento: 360, rodadoAteMomento: 252 },
-    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE JANDIRA", kmContratado: 1150, kmDisponivelDia: 41, kmPermitidoAteMomento: 820, rodadoAteMomento: 357 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO", kmContratado: 3700, kmDisponivelDia: 132, kmPermitidoAteMomento: 2640, rodadoAteMomento: 250 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 2 - SAO JOAO DA B.V", kmContratado: 3200, kmDisponivelDia: 114, kmPermitidoAteMomento: 2280, rodadoAteMomento: 2308 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 3 - BRAGANÇA PAULISTA", kmContratado: 520, kmDisponivelDia: 19, kmPermitidoAteMomento: 380, rodadoAteMomento: 2428 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 4 - CABREUVA", kmContratado: 1925, kmDisponivelDia: 69, kmPermitidoAteMomento: 1380, rodadoAteMomento: 2025 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE BAIXADA", kmContratado: 300, kmDisponivelDia: 11, kmPermitidoAteMomento: 220, rodadoAteMomento: 263 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE LORENA", kmContratado: 1400, kmDisponivelDia: 50, kmPermitidoAteMomento: 1000, rodadoAteMomento: 111 },
-    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE - SUMARÉ", kmContratado: 2725, kmDisponivelDia: 97, kmPermitidoAteMomento: 1940, rodadoAteMomento: 2078 },
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE LESTE", kmContratado: 800, kmDisponivelDia: 29, kmPermitidoAteMomento: 403, rodadoAteMomento: 397},
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE INTERLAGOS", kmContratado: 500, kmDisponivelDia: 18, kmPermitidoAteMomento: 232, rodadoAteMomento: 268},
+    { mes: "2026-02", equipe: "ISACTEEP SPC - EQUIPE JANDIRA", kmContratado: 1150, kmDisponivelDia: 41, kmPermitidoAteMomento: 784, rodadoAteMomento: 366},
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 1 CAPAO BONITO", kmContratado: 3700, kmDisponivelDia: 132, kmPermitidoAteMomento: 3191, rodadoAteMomento: 509},
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 2 - SAO JOAO DA B.V", kmContratado: 3200, kmDisponivelDia: 114, kmPermitidoAteMomento: 43, rodadoAteMomento: 3243},
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 3 - BRAGANÇA PAULISTA", kmContratado: 520, kmDisponivelDia: 19, kmPermitidoAteMomento: 380, rodadoAteMomento: 2428},
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE 4 - CABREUVA", kmContratado: 1925, kmDisponivelDia: 69, kmPermitidoAteMomento: 214, rodadoAteMomento: 2139},
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE BAIXADA", kmContratado: 300, kmDisponivelDia: 11, kmPermitidoAteMomento: 14, rodadoAteMomento: 314},
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE LORENA", kmContratado: 1400, kmDisponivelDia: 50, kmPermitidoAteMomento: 1277, rodadoAteMomento: 123},
+    { mes: "2026-02", equipe: "ISACTEEP SPI - EQUIPE - SUMARÉ", kmContratado: 2725, kmDisponivelDia: 97, kmPermitidoAteMomento: 436, rodadoAteMomento: 228},
+    { mes: "2026-02", equipe: "Zona Operativa 1 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 638, rodadoAteMomento: 3862},
+    { mes: "2026-02", equipe: "Zona Operativa 2 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 2531, rodadoAteMomento: 1969},
+    { mes: "2026-02", equipe: "Zona Operativa 3 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 1460, rodadoAteMomento: 3040},
+    { mes: "2026-02", equipe: "Zona Operativa 4 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 2008, rodadoAteMomento: 2492},
+    { mes: "2026-02", equipe: "Zona Operativa Interior - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 1071, rodadoAteMomento: 5571},
+    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - ALAGOAS", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 1143, rodadoAteMomento: 2143 },
+    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - Bahia", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 444, rodadoAteMomento: 556 },
+    { mes: "2026-02", equipe: "VMO - AMAZONAS", kmContratado: 434, kmDisponivelDia: 16, kmPermitidoAteMomento: 355, rodadoAteMomento: 789 },
+    { mes: "2026-02", equipe: "VMO - TBG - GUARAREMA", kmContratado: 11000, kmDisponivelDia: 393, kmPermitidoAteMomento: 533, rodadoAteMomento: 10467 },
+    { mes: "2026-02", equipe: "GLP - RJ", kmContratado: 1500, kmDisponivelDia: 54, kmPermitidoAteMomento: 4499, rodadoAteMomento: 5999 },
 
-    { mes: "2026-02", equipe: "Zona Operativa 1 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 3334 },
-    { mes: "2026-02", equipe: "Zona Operativa 2 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 1690 },
-    { mes: "2026-02", equipe: "Zona Operativa 3 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2701 },
-    { mes: "2026-02", equipe: "Zona Operativa 4 - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 2240 },
-    { mes: "2026-02", equipe: "Zona Operativa Interior - Telefônica", kmContratado: 4500, kmDisponivelDia: 161, kmPermitidoAteMomento: 3220, rodadoAteMomento: 4751 },
-
-    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - ALAGOAS", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 1973 },
-    { mes: "2026-02", equipe: "EQUIPE VMO - QUEPAR - Bahia", kmContratado: 1000, kmDisponivelDia: 36, kmPermitidoAteMomento: 720, rodadoAteMomento: 556 },
-    { mes: "2026-02", equipe: "VMO - AMAZONAS", kmContratado: 434, kmDisponivelDia: 16, kmPermitidoAteMomento: 320, rodadoAteMomento: 789 },
-    { mes: "2026-02", equipe: "VMO - TBG - GUARAREMA", kmContratado: 11000, kmDisponivelDia: 393, kmPermitidoAteMomento: 7860, rodadoAteMomento: 8564 },
-    { mes: "2026-02", equipe: "GLP - RJ", kmContratado: 1500, kmDisponivelDia: 54, kmPermitidoAteMomento: 1080, rodadoAteMomento: 5310 },
     ];
 
 // =========================================================
@@ -573,9 +573,9 @@ const $ = (id) => document.getElementById(id);
 const tbody = $("mxTbody");
 const filterMes = $("filterMes");
 const filterStatus = $("filterStatus");
-const sortBy = $("sortBy");
 const filterCliente = $("filterCliente");
 const filterEquipe = $("filterEquipe");
+const sortBy = $("sortBy");
 const clienteCards = $("mxClienteCards");
 
 function normalize(s){ return (s || "").toString().trim().toLowerCase(); }
@@ -621,24 +621,25 @@ function daysInMonth(yyyy, mm){
   return new Date(yyyy, mm, 0).getDate();
 }
 
-function inferDaysPassed(row){
-  // ✅ Regra nova (mês atual): usa o dia real do mês (ex.: hoje = 26)
-  // Assim a projeção vira: (rodado até agora / diaAtual) * totalDiasDoMês
+function inferDaysPassed(row, totalDays){
+  // ✅ Projeção por dia do mês:
+  // - Se o mês do registro for o mês atual: usa o dia real (ex.: hoje = 26)
+  // - Se NÃO for o mês atual: assume mês fechado (usa totalDays)
   try{
     const parts = (row.mes || "").split("-");
     const yyyy = Number(parts[0]);
     const mm = Number(parts[1]); // 1..12
+
     const hoje = new Date();
     const mesAtual = (hoje.getFullYear() === yyyy) && ((hoje.getMonth() + 1) === mm);
+
     if (mesAtual){
-      return Math.max(1, hoje.getDate());
+      return Math.max(1, Math.min(hoje.getDate(), totalDays || 31));
     }
   }catch(e){ /* ignore */ }
 
-  // 🔁 Fallback (mês não atual): mantém a lógica anterior baseada no permitido
-  if (!row.kmDisponivelDia || !row.kmPermitidoAteMomento) return 0;
-  const d = row.kmPermitidoAteMomento / row.kmDisponivelDia;
-  return Math.max(1, Math.round(d));
+  // Mês não atual → considera mês completo
+  return Math.max(1, Number(totalDays || 0));
 }
 function calcRow(row){
   const parts = (row.mes || "").split("-");
@@ -647,7 +648,7 @@ function calcRow(row){
   const mm = Number(mmStr);
 
   const totalDays = daysInMonth(Number(yyyy), mm);
-  const daysPassed = inferDaysPassed(row);
+  const daysPassed = inferDaysPassed(row, totalDays);
 
   const permitido = Number(row.kmPermitidoAteMomento || 0);
   const rodado = Number(row.rodadoAteMomento || 0);
@@ -705,7 +706,7 @@ function cardClass(contratado, saldoProj){
   const s = Number(saldoProj || 0);
   if (c <= 0) return 'neutral';
   if (s < 0) return 'danger';
-  if (s <= c * 0.05) return 'warn';
+  if (s <= c * 0.03) return 'warn';
   return 'ok';
 }
 
@@ -721,77 +722,80 @@ function renderClienteCards(list){
   const totalContr = list.reduce((a,r) => a + Number(r.kmContratado || 0), 0);
   const totalRod = list.reduce((a,r) => a + Number(r.rodadoAteMomento || 0), 0);
   const totalProj = list.reduce((a,r) => a + Number(r.projFim || 0), 0);
+
   const saldoAtual = totalContr - totalRod;
-  const saldoProj = totalContr - totalProj;
+  const saldoProjLiquido = totalContr - totalProj;
 
-  // Prejuízo (R$1 por KM excedido) — SOMENTE quando rodado já passou do contratado
-  const totalExcedenteKm = list.reduce((acc, r) => {
-    const rod = Number(r.rodadoAteMomento || 0);
-    const ctr = Number(r.kmContratado || 0);
-    return acc + Math.max(0, rod - ctr);
-  }, 0);
-  const totalPrejuizo = totalExcedenteKm; // R$ 1 por km
+  // Prejuízo (R$ 1 por KM) — SOMENTE se o TOTAL REALIZADO (somado) exceder o TOTAL CONTRATADO
+  const prejuizoTotalKm = Math.max(0, totalRod - totalContr);
+  const prejuizoTotal = prejuizoTotalKm; // R$ 1 por km
 
-  // Agrupa por cliente (e já acumula excedente por cliente)
+  // Agrupa por cliente
   const map = new Map();
   list.forEach(r => {
     const cli = (r.cliente || getCliente(r) || '—').toString();
-    if (!map.has(cli)) map.set(cli, { cliente: cli, contratado: 0, rodado: 0, proj: 0, excedente: 0 });
-    const it = map.get(cli);
+    if (!map.has(cli)) map.set(cli, { cliente: cli, contratado: 0, rodado: 0, proj: 0 });
 
+    const it = map.get(cli);
     it.contratado += Number(r.kmContratado || 0);
     it.rodado += Number(r.rodadoAteMomento || 0);
     it.proj += Number(r.projFim || 0);
-
-    const rod = Number(r.rodadoAteMomento || 0);
-    const ctr = Number(r.kmContratado || 0);
-    it.excedente += Math.max(0, rod - ctr);
   });
 
   const clientes = Array.from(map.values())
-    .map(it => ({
-      ...it,
-      saldoAtual: it.contratado - it.rodado,
-      saldoProj: it.contratado - it.proj,
-      prejuizo: (it.excedente || 0) // R$ 1 por km
-    }))
+    .map(it => {
+      const saldoAtualCli = it.contratado - it.rodado;
+      const saldoProjLiquidoCli = it.contratado - it.proj;
+      const prejuizoCliKm = Math.max(0, it.rodado - it.contratado);
+      return {
+        ...it,
+        saldoAtual: saldoAtualCli,
+        saldoProjLiquido: saldoProjLiquidoCli,
+        prejuizoKm: prejuizoCliKm,
+        prejuizo: prejuizoCliKm,
+      };
+    })
     .sort((a,b) => a.cliente.localeCompare(b.cliente, 'pt-BR'));
 
   const cards = [];
 
   // TOTAL
-  const clsTotal = cardClass(totalContr, saldoProj);
+  const clsTotal = cardClass(totalContr, saldoProjLiquido);
   cards.push(`
     <div class="mx-client-card ${clsTotal}">
       <div class="mx-client-title">
         <div class="name">TOTAL (FILTROS)</div>
-        <span class="pill">${saldoProj < 0 ? 'Pagando p/ trabalhar' : 'Positivo'}</span>
+        <span class="pill">${saldoProjLiquido < 0 ? 'Pagando p/ trabalhar' : 'Sobras'}</span>
       </div>
       <div class="mx-client-metrics">
         <div class="mx-metric"><div class="k">Contratado</div><div class="v">${fmtKm(totalContr)} km</div></div>
         <div class="mx-metric"><div class="k">Realizado</div><div class="v">${fmtKm(totalRod)} km</div></div>
+
         <div class="mx-metric"><div class="k">Saldo atual</div><div class="v ${clsSaldo(saldoAtual)}">${fmtKm(saldoAtual)} km</div></div>
-        <div class="mx-metric"><div class="k">Saldo proj.</div><div class="v ${clsSaldo(saldoProj)}">${fmtKm(saldoProj)} km</div></div>
-        <div class="mx-metric full"><div class="k">Prejuízo estimado (R$)</div><div class="v ${totalPrejuizo > 0 ? 'loss' : 'pos'}">R$ ${fmtMoney(totalPrejuizo)}${totalPrejuizo > 0 ? `` : ''}</div></div>
+        <div class="mx-metric"><div class="k">Saldo proj. (líquido)</div><div class="v ${clsSaldo(saldoProjLiquido)}">${fmtKm(saldoProjLiquido)} km</div></div>
+
+        <div class="mx-metric full"><div class="k">Prejuízo (R$)</div><div class="v ${prejuizoTotal > 0 ? 'loss' : 'pos'}">${prejuizoTotal > 0 ? `R$ ${fmtMoney(prejuizoTotal)} (${fmtKm(prejuizoTotalKm)} km)` : 'R$ 0'}</div></div>
       </div>
     </div>
   `);
 
   // Por cliente
   clientes.forEach(it => {
-    const cls = cardClass(it.contratado, it.saldoProj);
+    const cls = cardClass(it.contratado, it.saldoProjLiquido);
     cards.push(`
       <div class="mx-client-card ${cls}">
         <div class="mx-client-title">
           <div class="name">${it.cliente}</div>
-          <span class="pill">${it.saldoProj < 0 ? 'Pagando p/ trabalhar' : 'Positivo'}</span>
+          <span class="pill">${it.saldoProjLiquido < 0 ? 'Pagando p/ trabalhar' : 'Sobras'}</span>
         </div>
         <div class="mx-client-metrics">
           <div class="mx-metric"><div class="k">Contratado</div><div class="v">${fmtKm(it.contratado)} km</div></div>
           <div class="mx-metric"><div class="k">Realizado</div><div class="v">${fmtKm(it.rodado)} km</div></div>
+
           <div class="mx-metric"><div class="k">Saldo atual</div><div class="v ${clsSaldo(it.saldoAtual)}">${fmtKm(it.saldoAtual)} km</div></div>
-          <div class="mx-metric"><div class="k">Saldo proj.</div><div class="v ${clsSaldo(it.saldoProj)}">${fmtKm(it.saldoProj)} km</div></div>
-          <div class="mx-metric full"><div class="k">Prejuízo (R$)</div><div class="v ${it.prejuizo > 0 ? 'loss' : 'pos'}">R$ ${fmtMoney(it.prejuizo)}${it.prejuizo > 0 ? `` : ''}</div></div>
+          <div class="mx-metric"><div class="k">Saldo proj. (líquido)</div><div class="v ${clsSaldo(it.saldoProjLiquido)}">${fmtKm(it.saldoProjLiquido)} km</div></div>
+
+          <div class="mx-metric full"><div class="k">Prejuízo (R$)</div><div class="v ${it.prejuizo > 0 ? 'loss' : 'pos'}">${it.prejuizo > 0 ? `R$ ${fmtMoney(it.prejuizo)} (${fmtKm(it.prejuizoKm)} km)` : 'R$ 0'}</div></div>
         </div>
       </div>
     `);
@@ -829,13 +833,26 @@ function renderTable(list){
   });
 }
 
+function populateSelectFilters(monthRows){
+  // Popula os selects (Cliente e Equipe) com base no mês selecionado.
+  // Regra B: quando Cliente estiver selecionado, o select Equipe mostra SOMENTE as equipes desse cliente.
+  const currentCli = normalize(filterCliente.value);
+  const currentEq = normalize(filterEquipe.value);
 
-function populateClienteFilter(rows){
-  if (!filterCliente) return;
-  const current = normalize(filterCliente.value);
-  const clientes = Array.from(new Set(rows.map(r => (r.cliente || '').toString().trim()).filter(Boolean)))
-    .sort((a,b) => a.localeCompare(b, 'pt-BR'));
+  const clientes = Array.from(
+    new Set(monthRows.map(r => (r.cliente || getCliente(r) || '—').toString().trim()).filter(Boolean))
+  ).sort((a,b) => a.localeCompare(b, 'pt-BR'));
 
+  // Equipes filtradas por cliente (se houver)
+  const baseEquipes = currentCli
+    ? monthRows.filter(r => normalize(r.cliente) === currentCli)
+    : monthRows;
+
+  const equipes = Array.from(
+    new Set(baseEquipes.map(r => (r.equipe || '').toString().trim()).filter(Boolean))
+  ).sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+  // Cliente
   filterCliente.innerHTML = '<option value="">Todos</option>';
   clientes.forEach(c => {
     const opt = document.createElement('option');
@@ -844,18 +861,7 @@ function populateClienteFilter(rows){
     filterCliente.appendChild(opt);
   });
 
-  if (current && clientes.some(c => normalize(c) === current)) filterCliente.value = current;
-  else filterCliente.value = '';
-}
-
-function populateEquipeFilter(rows, cli){
-  if (!filterEquipe) return;
-  const current = normalize(filterEquipe.value);
-
-  const scoped = cli ? rows.filter(r => normalize(r.cliente) === cli) : rows;
-  const equipes = Array.from(new Set(scoped.map(r => (r.equipe || '').toString().trim()).filter(Boolean)))
-    .sort((a,b) => a.localeCompare(b, 'pt-BR'));
-
+  // Equipe
   filterEquipe.innerHTML = '<option value="">Todas</option>';
   equipes.forEach(e => {
     const opt = document.createElement('option');
@@ -864,25 +870,35 @@ function populateEquipeFilter(rows, cli){
     filterEquipe.appendChild(opt);
   });
 
-  if (current && equipes.some(e => normalize(e) === current)) filterEquipe.value = current;
-  else filterEquipe.value = '';
+  // Restaura seleção se ainda existir
+  if (currentCli && clientes.some(c => normalize(c) === currentCli)) {
+    filterCliente.value = currentCli;
+  } else {
+    filterCliente.value = '';
+  }
+
+  // Equipe só é mantida se existir dentro do cliente selecionado
+  if (currentEq && equipes.some(e => normalize(e) === currentEq)) {
+    filterEquipe.value = currentEq;
+  } else {
+    filterEquipe.value = '';
+  }
 }
 
 function applyFilters(){
   const mes = filterMes.value;
   const st = filterStatus.value;
   const sort = sortBy.value;
-
   const cli = normalize(filterCliente.value);
   const eq = normalize(filterEquipe.value);
 
+  // Base do mês (já com cálculos)
   const monthRows = matrixData
     .filter(r => r.mes === mes)
     .map(calcRow);
 
-  // Atualiza opções dos filtros (dinâmico por mês e por cliente)
-  populateClienteFilter(monthRows);
-  populateEquipeFilter(monthRows, cli);
+  // Popula selects (equipe depende do cliente)
+  populateSelectFilters(monthRows);
 
   const base = monthRows.filter(r => {
     if (cli && normalize(r.cliente) !== cli) return false;
@@ -1016,7 +1032,7 @@ function fmtKmPdf(n){
 }
 
 function saldoLabel(saldoProj){
-  return Number(saldoProj) < 0 ? 'Pagando p/ trabalhar' : 'Positivo';
+  return Number(saldoProj) < 0 ? 'Pagando p/ trabalhar' : 'Sobras';
 }
 
 function clientCardStyle(item){
@@ -1140,7 +1156,8 @@ function gerarPdfRelatorio(){
   const mesTxt = getSelectedText(filterMes);
   const statusTxt = filterStatus.value ? getSelectedText(filterStatus) : 'Todos';
   const ordenacaoTxt = getSelectedText(sortBy);
-const titulo = 'Relatório - Matriz de controle mensal (KM)';
+
+  const titulo = 'Relatório - Matriz de controle mensal (KM)';
   const geradoEm = new Date().toLocaleString('pt-BR');
 
   doc.setFont('helvetica', 'bold');
@@ -1152,9 +1169,7 @@ const titulo = 'Relatório - Matriz de controle mensal (KM)';
   doc.setFontSize(10);
   doc.setTextColor(60);
   doc.text(`Gerado em: ${geradoEm}`, 14, 20);
-  const clienteTxt = filterCliente.value ? getSelectedText(filterCliente) : "Todos";
-  const equipeTxt = filterEquipe.value ? getSelectedText(filterEquipe) : "Todas";
-  doc.text(`Filtros: Mês: ${mesTxt} • Cliente: ${clienteTxt} • Equipe: ${equipeTxt} • Status: ${statusTxt} • Ordenação: ${ordenacaoTxt}`, 14, 26);
+  doc.text(`Filtros: Mês: ${mesTxt} • Cliente: ${filterCliente.value ? getSelectedText(filterCliente) : "Todos"} • Equipe: ${filterEquipe.value ? getSelectedText(filterEquipe) : "Todas"} • Status: ${statusTxt} • Ordenação: ${ordenacaoTxt}`, 14, 26);
 
   let y = drawKpiCards(doc, 14, 30) + 6;
 
@@ -1222,7 +1237,9 @@ filterMes.addEventListener(evt, applyFilters);
 });
 
 $("btnLimpar").addEventListener("click", () => {
-filterStatus.value = "";
+  filterCliente.value = "";
+  filterEquipe.value = "";
+  filterStatus.value = "";
   sortBy.value = "risco_desc";
   applyFilters();
 });
